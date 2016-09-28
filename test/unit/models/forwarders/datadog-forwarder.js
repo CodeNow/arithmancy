@@ -22,8 +22,10 @@ describe('datadog-forworder unit test', () => {
     describe('initialize', () => {
       it('should throw it not implemented', (done) => {
         datadogForwarder.initialize()
-        expect(datadogForwarder._datadogClient).to.exist()
-        done()
+          .then(() => {
+            expect(datadogForwarder._datadogClient).to.exist()
+            done()
+          })
       })
     }) // end initialize
 
@@ -51,9 +53,11 @@ describe('datadog-forworder unit test', () => {
 
       it('should throw if not implemented', (done) => {
         datadogForwarder.sendMetricEvent(testMetricEvent)
-        sinon.assert.calledOnce(datadogForwarder._datadogClient.increment)
-        sinon.assert.calledWith(datadogForwarder._datadogClient.increment, testName, testTags)
-        done()
+          .then(() => {
+            sinon.assert.calledOnce(datadogForwarder._datadogClient.increment)
+            sinon.assert.calledWith(datadogForwarder._datadogClient.increment, testName, testTags)
+            done()
+          })
       })
     }) // end sendMetricEvent
   }) // end methods
