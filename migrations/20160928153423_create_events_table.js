@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger').child({ migration: 'create_events_table' })
 
-exports.up = function(knex, Promise) {
+exports.up = (knex, Promise) => {
   const createTable = knex.schema.createTable('events', (table) => {
     table.increments('id').primary()
     table.timestamps(false)
@@ -14,12 +14,12 @@ exports.up = function(knex, Promise) {
     table.string('org')
     table.string('stack')
   })
-  log.trace({ createTable }, 'migration up')
+  log.debug({ createTable }, 'migration up')
   return createTable
 }
 
-exports.down = function(knex, Promise) {
-  const dropTable = knex.schema.dropTable('users')
-  debug(dropTable.toString())
+exports.down = (knex, Promise) => {
+  const dropTable = knex.schema.dropTable('events')
+  log.debug(dropTable.toString())
   return dropTable
 }
