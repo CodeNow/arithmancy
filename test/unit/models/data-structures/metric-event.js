@@ -17,8 +17,8 @@ describe('metric-event', () => {
     timePublished: new Date().toISOString(),
     timeRecevied: new Date().toISOString(),
     transactionId: '123123123123',
-    originatingEventName: 'git.hook',
-    previousEventName: 'container.start',
+    publisherAppName: 'git.hook',
+    publisherEventName: 'container.start',
     tags: {
       org: 'anandkumarpatel',
       stack: 'anandkumarpatel'
