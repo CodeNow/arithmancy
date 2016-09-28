@@ -3,7 +3,7 @@ const Code = require('code')
 const Lab = require('lab')
 
 const NotImplemented = require('errors/not-implemented')
-const BasePersistentStore = require('models/persistent-stores/base-persistent-store')
+const BaseForwarder = require('models/forwarders/base-forwarder')
 
 const lab = exports.lab = Lab.script()
 
@@ -12,33 +12,33 @@ const describe = lab.describe
 const expect = Code.expect
 const it = lab.it
 
-describe('persistent-store unit test', () => {
+describe('base-forworder unit test', () => {
   describe('methods', () => {
-    let persistentStore
+    let forwarder
 
     beforeEach((done) => {
-      persistentStore = new BasePersistentStore()
+      forwarder = new BaseForwarder()
       done()
     })
 
-    describe('initialize', () => {
+    describe('connect', () => {
       it('should throw it not implemented', (done) => {
         expect(() => {
-          persistentStore.initialize()
+          forwarder.initialize()
         }).to.throw(NotImplemented, /Not Implemented/)
 
         done()
       })
-    }) // end initialize
+    }) // end connect
 
-    describe('save', () => {
+    describe('sendMetricEvent', () => {
       it('should throw if not implemented', (done) => {
         expect(() => {
-          persistentStore.save()
+          forwarder.sendMetricEvent()
         }).to.throw(NotImplemented, /Not Implemented/)
 
         done()
       })
-    }) // end save
+    }) // end sendMetricEvent
   }) // end methods
-}) // persistent-store unit test
+}) // base-forworder unit test
