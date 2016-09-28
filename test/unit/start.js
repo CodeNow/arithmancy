@@ -4,9 +4,10 @@ const Lab = require('lab')
 const Promise = require('bluebird')
 const sinon = require('sinon')
 
-const publisher = require('../../lib/external/publisher.js')
-const start = require('../../lib/start.js')
-const workerServer = require('../../lib/external/worker-server.js')
+const datadogForwarder = require('models/forwarders/datadog-forwarder')
+const publisher = require('external/publisher')
+const start = require('start')
+const workerServer = require('external/worker-server')
 
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
@@ -20,6 +21,7 @@ describe('start.js unit test', () => {
   describe('flow', () => {
     beforeEach((done) => {
       sinon.stub(publisher, 'start')
+      sinon.stub(datadogForwarder, 'initialize')
       sinon.stub(workerServer, 'start')
       sinon.stub(ErrorCat, 'report')
       sinon.stub(process, 'exit')
@@ -27,6 +29,7 @@ describe('start.js unit test', () => {
     })
 
     afterEach((done) => {
+      datadogForwarder.initialize.restore()
       publisher.start.restore()
       workerServer.start.restore()
       ErrorCat.report.restore()
@@ -37,10 +40,12 @@ describe('start.js unit test', () => {
     it('should start publisher and server', (done) => {
       publisher.start.resolves()
       workerServer.start.resolves()
+      datadogForwarder.initialize.resolves()
 
       start().asCallback((err) => {
         if (err) { return done(err) }
         sinon.assert.callOrder(
+          datadogForwarder.initialize,
           publisher.start,
           workerServer.start
         )
@@ -51,7 +56,7 @@ describe('start.js unit test', () => {
     })
 
     it('should report and exit on error', (done) => {
-      publisher.start.rejects(new Error('death star'))
+      datadogForwarder.initialize.rejects(new Error('death star'))
 
       start().asCallback((err) => {
         if (err) { return done(err) }
