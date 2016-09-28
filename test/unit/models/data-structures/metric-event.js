@@ -2,7 +2,7 @@
 const Lab = require('lab')
 const Code = require('code')
 
-const MetricEvent = require('../../../lib/models/metric-event')
+const MetricEvent = require('models/data-structures/metric-event')
 
 const lab = exports.lab = Lab.script()
 
