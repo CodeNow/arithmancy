@@ -38,7 +38,7 @@ describe('metric-event', () => {
       done()
     })
 
-    it('should save all properties on event', (done) => {
+    it('should saveMetricEvent all properties on event', (done) => {
       new MetricEvent(testData)
       done()
     })

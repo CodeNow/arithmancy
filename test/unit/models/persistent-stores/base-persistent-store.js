@@ -31,14 +31,14 @@ describe('persistent-store unit test', () => {
       })
     }) // end initialize
 
-    describe('save', () => {
+    describe('saveMetricEvent', () => {
       it('should throw if not implemented', (done) => {
         expect(() => {
-          persistentStore.save()
+          persistentStore.saveMetricEvent()
         }).to.throw(NotImplemented, /Not Implemented/)
 
         done()
       })
-    }) // end save
+    }) // end saveMetricEvent
   }) // end methods
 }) // persistent-store unit test
