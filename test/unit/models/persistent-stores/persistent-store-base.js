@@ -3,7 +3,7 @@ const Code = require('code')
 const Lab = require('lab')
 
 const NotImplemented = require('errors/not-implemented')
-const PersistentStoreBase = require('models/persistent-stores/persistent-store-base')
+const BasePersistentStore = require('models/persistent-stores/base-persistent-store')
 
 const lab = exports.lab = Lab.script()
 
@@ -17,7 +17,7 @@ describe('persistent-store unit test', () => {
     let persistentStore
 
     beforeEach((done) => {
-      persistentStore = new PersistentStoreBase()
+      persistentStore = new BasePersistentStore()
       done()
     })
 
