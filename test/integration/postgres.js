@@ -21,19 +21,19 @@ describe('postgres integration test', () => {
     timeRecevied: testDate,
     transactionId: '123123123123',
     publisherAppName: 'git.hook',
-    publisherEventName: 'container.start',
+    previousEventName: 'container.start',
     tags: {
-      org: 'anandkumarpatel',
-      stack: 'anandkumarpatel'
+      org: 'djFaZe',
+      stack: 'nodejs'
     }
   }
 
   beforeEach((done) => {
     postgresStore.initialize()
       .then(() => {
-        return postgresStore._bookshelf.knex('events').truncate()
+        return postgresStore._knex('events').truncate()
           .then(() => {
-            return postgresStore._bookshelf.knex('events').del()
+            return postgresStore._knex('events').del()
           })
           .catch((err) => {
             if (!~err.message.indexOf('does not exist')) {
@@ -45,27 +45,25 @@ describe('postgres integration test', () => {
   })
 
   afterEach((done) => {
-    postgresStore._bookshelf.knex.destroy(done)
+    postgresStore._knex.destroy(done)
   })
 
   it('should write entry to database', (done) => {
     postgresStore.saveMetricEvent(new MetricEvent(testData))
       .then(() => {
-        return postgresStore._eventsModel.fetchAll({require: true})
-          .tap((eventDataCollection) => {
-            return eventDataCollection.count().then((number) => {
-              expect(number).to.equal('1')
-            })
-          })
-          .tap((eventDataCollection) => {
-            const eventData = eventDataCollection.pop()
-            expect(eventData.attributes).to.equal({
+        return postgresStore._knex('events')
+          .then((eventDataTable) => {
+            expect(eventDataTable).to.have.length(1)
+            // console.log('eventDataCollection', eventDataCollection.models)
+            const eventData = eventDataTable.pop()
+            expect(eventData).to.equal({
+              id: 1,
               eventName: 'container.died',
               timePublished: testDate,
               timeRecevied: testDate,
               transactionId: '123123123123',
               publisherAppName: 'git.hook',
-              publisherEventName: 'container.start',
+              previousEventName: 'container.start',
               org: 'anandkumarpatel',
               stack: 'anandkumarpatel'
             })
