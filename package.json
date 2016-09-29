@@ -7,8 +7,18 @@
     "test": "test"
   },
   "scripts": {
+    "all-test": "npm run unit && npm run functional && npm run integration",
+    "coverage": "NODE_PATH=./lib NODE_ENV=test lab -c -r html -o ./coverage/index.html",
+    "functional": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/functional",
+    "integration": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/integration",
+    "lint": "standard --verbose",
+    "migrate-down": "NODE_PATH=./lib NODE_ENV=test knex-migrate down",
+    "migrate-up": "NODE_PATH=./lib NODE_ENV=test knex-migrate up",
     "start": "node index.js",
-    "test": "NODE_ENV=test lab -v -c -t 100"
+    "test": "NODE_ENV=test lab -v -c -t 100",
+    "test": "npm run lint && npm run coverage",
+    "test": "npm run migrate-down && npm run migrate-up && npm run lint && npm run all-test",
+    "unit": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/unit"
   },
   "repository": {
     "type": "git",
