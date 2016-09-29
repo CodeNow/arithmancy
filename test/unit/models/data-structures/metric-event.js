@@ -19,10 +19,7 @@ describe('metric-event', () => {
     transactionId: '123123123123',
     publisherAppName: 'git.hook',
     previousEventName: 'container.start',
-    tags: {
-      org: 'anandkumarpatel',
-      stack: 'anandkumarpatel'
-    }
+    org: 'djFaZe'
   }
 
   describe('constructor', () => {

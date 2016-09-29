@@ -22,11 +22,10 @@ describe('postgres integration test', () => {
     transactionId: '123123123123',
     publisherAppName: 'git.hook',
     previousEventName: 'container.start',
-    tags: {
-      org: 'djFaZe',
-      stack: 'nodejs'
-    }
+    org: 'djFaZe',
+    stack: 'nodejs'
   }
+  const testMeticEvent = new MetricEvent(testData)
 
   beforeEach((done) => {
     postgresStore.initialize()
@@ -49,23 +48,25 @@ describe('postgres integration test', () => {
   })
 
   it('should write entry to database', (done) => {
-    postgresStore.saveMetricEvent(new MetricEvent(testData))
+    postgresStore.saveMetricEvent(testMeticEvent)
       .then(() => {
         return postgresStore._knex('events')
           .then((eventDataTable) => {
             expect(eventDataTable).to.have.length(1)
-            // console.log('eventDataCollection', eventDataCollection.models)
             const eventData = eventDataTable.pop()
             expect(eventData).to.equal({
               id: 1,
-              eventName: 'container.died',
-              timePublished: testDate,
-              timeRecevied: testDate,
-              transactionId: '123123123123',
-              publisherAppName: 'git.hook',
-              previousEventName: 'container.start',
-              org: 'anandkumarpatel',
-              stack: 'anandkumarpatel'
+              event_name: 'container.died',
+              time_published: testDate,
+              time_recevied: testDate,
+              transaction_id: '123123123123',
+              publisher_app_name: 'git.hook',
+              previous_event_name: 'container.start',
+              org: 'djFaZe',
+              stack: 'nodejs',
+              host: null,
+              template: null,
+              branch: null
             })
           })
       })
