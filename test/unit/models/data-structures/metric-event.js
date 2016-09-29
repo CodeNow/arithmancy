@@ -17,12 +17,9 @@ describe('metric-event', () => {
     timePublished: new Date().toISOString(),
     timeRecevied: new Date().toISOString(),
     transactionId: '123123123123',
-    originatingEventName: 'git.hook',
+    appName: process.env.APP_NAME,
     previousEventName: 'container.start',
-    tags: {
-      org: 'anandkumarpatel',
-      stack: 'anandkumarpatel'
-    }
+    githubOrgId: 123123
   }
 
   describe('constructor', () => {

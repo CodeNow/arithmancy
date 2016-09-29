@@ -1,18 +1,26 @@
 {
   "name": "arithmancy",
   "version": "0.0.3",
-  "description": "Sauron is the greatest and most trusted servant of Runnable during Two Point O.  After the downfall of his master, he continuously strove to conquer container networking.  Deceiving the developers, whom under his guidance created subnets, he secretly forged one virtual network to connect them all.  Hence, Sauron is deemed 'The Lord of the Networks'",
+  "description": "metric collector",
   "main": "lib/app.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "all-test": "npm run unit && npm run functional && npm run integration",
+    "coverage": "NODE_PATH=./lib NODE_ENV=test lab -c -r html -o ./coverage/index.html",
+    "functional": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/functional",
+    "integration": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/integration",
+    "lint": "standard --verbose",
+    "migrate-down": "NODE_PATH=./lib NODE_ENV=test knex-migrate down",
+    "migrate-up": "NODE_PATH=./lib NODE_ENV=test knex-migrate up",
     "start": "node index.js",
-    "test": "NODE_ENV=test lab -v -c -t 100"
+    "test": "npm run migrate-down && npm run migrate-up && npm run lint && npm run all-test",
+    "unit": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/unit"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/codenow/padme.git"
+    "url": "git://github.com/codenow/arithmancy.git"
   },
   "keywords": [
     "networking",
@@ -21,28 +29,33 @@
   "author": "anandkumarpatel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/codenow/padme/issues"
+    "url": "https://github.com/codenow/arithmancy/issues"
   },
   "engines": {
     "node": ">=4.2.2 <5",
     "npm": ">=2.14.7"
   },
-  "homepage": "https://github.com/codenow/padme",
+  "homepage": "https://github.com/codenow/arithmancy",
   "dependencies": {
-    "101": "^1.5.0",
+    "101": "^1.6.2",
     "bluebird": "^3.0.5",
     "bunyan": "^1.5.1",
     "continuation-local-storage": "^3.2.0",
     "error-cat": "^3.0.0",
     "joi": "^9.0.4",
-    "loadenv": "^2.1.0",
+    "knex": "^0.12.2",
+    "loadenv": "^2.2.0",
     "monitor-dog": "^1.5.0",
-    "ponos": "^5.3.1"
+    "pg": "^6.1.0",
+    "ponos": "^5.5.0",
+    "stringcase": "^3.1.1"
   },
   "devDependencies": {
     "code": "^4.0.0",
+    "knex-migrate": "^1.1.2",
     "lab": "^11.1.0",
     "sinon": "^1.17.3",
-    "sinon-as-promised": "^4.0.2"
+    "sinon-as-promised": "^4.0.2",
+    "standard": "^8.3.0"
   }
 }
