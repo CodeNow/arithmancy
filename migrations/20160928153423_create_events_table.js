@@ -1,25 +1,7 @@
 'use strict'
-const joi = require('joi')
-
 const log = require('logger').child({ migration: 'create_events_table' })
 const KnexTableFromJoi = require('./knex-table-from-joi')
-
-const METRIC_EVENT_SCHEMA = joi.object({
-  eventName: joi.string().required(),
-  appName: joi.string().required(),
-  timePublished: joi.string().required(),
-  timeRecevied: joi.string().required(),
-  transactionId: joi.string().required().description('ID used to join events together'),
-  previousEventName: joi.string(),
-  // tags
-  githubOrgId: joi.string(),
-  githubUserId: joi.string(),
-  bigPoppaOrgId: joi.string(),
-  dockerHostIp: joi.string(),
-  masterInstanceId: joi.string(),
-  repoName: joi.string(),
-  branchName: joi.string()
-}).required()
+const METRIC_EVENT_SCHEMA = require('models/data-structures/metric-event')._METRIC_EVENT_SCHEMA
 
 exports.up = (knex, Promise) => {
   const createTable = knex.schema.createTable('events', (table) => {
