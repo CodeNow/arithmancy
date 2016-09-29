@@ -21,6 +21,8 @@ module.exports = class KnexTableFromJoi {
     const joiType = joiItem.schema._type
     if (joiType === 'string') {
       return 'string'
+    } else if (joiType === 'number') {
+      return 'integer'
     }
 
     throw new Error(`joi type ${joiType} is not supported`)

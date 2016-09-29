@@ -22,7 +22,7 @@ describe('postgres integration test', () => {
     timeRecevied: testDate,
     transactionId: '123123123123',
     previousEventName: 'container.start',
-    githubOrgId: 'djFaZe'
+    githubOrgId: 123123
   }
   const testMeticEvent = new MetricEvent(testData)
 
@@ -61,7 +61,7 @@ describe('postgres integration test', () => {
               time_recevied: testDate,
               transaction_id: '123123123123',
               previous_event_name: 'container.start',
-              github_org_id: 'djFaZe',
+              github_org_id: 123123,
               github_user_id: null,
               big_poppa_org_id: null,
               docker_host_ip: null,
