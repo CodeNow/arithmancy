@@ -16,14 +16,13 @@ const it = lab.it
 describe('postgres integration test', () => {
   const testDate = new Date().toISOString()
   const testData = {
+    appName: process.env.APP_NAME,
     eventName: 'container.died',
     timePublished: testDate,
     timeRecevied: testDate,
     transactionId: '123123123123',
-    publisherAppName: 'git.hook',
     previousEventName: 'container.start',
-    org: 'djFaZe',
-    stack: 'nodejs'
+    githubOrgId: 'djFaZe'
   }
   const testMeticEvent = new MetricEvent(testData)
 
@@ -57,16 +56,18 @@ describe('postgres integration test', () => {
             expect(eventData).to.equal({
               id: 1,
               event_name: 'container.died',
+              app_name: process.env.APP_NAME,
               time_published: testDate,
               time_recevied: testDate,
               transaction_id: '123123123123',
-              publisher_app_name: 'git.hook',
               previous_event_name: 'container.start',
-              org: 'djFaZe',
-              stack: 'nodejs',
-              host: null,
-              template: null,
-              branch: null
+              github_org_id: 'djFaZe',
+              github_user_id: null,
+              big_poppa_org_id: null,
+              docker_host_ip: null,
+              master_instance_id: null,
+              repo_name: null,
+              branch_name: null
             })
           })
       })

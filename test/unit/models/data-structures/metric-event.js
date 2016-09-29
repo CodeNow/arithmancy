@@ -17,9 +17,9 @@ describe('metric-event', () => {
     timePublished: new Date().toISOString(),
     timeRecevied: new Date().toISOString(),
     transactionId: '123123123123',
-    publisherAppName: 'git.hook',
+    appName: 'git.hook',
     previousEventName: 'container.start',
-    org: 'djFaZe'
+    githubOrgId: 'djFaZe'
   }
 
   describe('constructor', () => {
