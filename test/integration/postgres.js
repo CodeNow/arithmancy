@@ -7,19 +7,18 @@ const MetricEvent = require('models/data-structures/metric-event')
 
 const lab = exports.lab = Lab.script()
 
-const after = lab.after
 const afterEach = lab.afterEach
-const before = lab.before
 const beforeEach = lab.beforeEach
 const describe = lab.describe
 const expect = Code.expect
 const it = lab.it
 
 describe('postgres integration test', () => {
+  const testDate = new Date().toISOString()
   const testData = {
     eventName: 'container.died',
-    timePublished: new Date().toISOString(),
-    timeRecevied: new Date().toISOString(),
+    timePublished: testDate,
+    timeRecevied: testDate,
     transactionId: '123123123123',
     publisherAppName: 'git.hook',
     publisherEventName: 'container.start',
@@ -51,6 +50,27 @@ describe('postgres integration test', () => {
 
   it('should write entry to database', (done) => {
     postgresStore.saveMetricEvent(new MetricEvent(testData))
+      .then(() => {
+        return postgresStore._eventsModel.fetchAll({require: true})
+          .tap((eventDataCollection) => {
+            return eventDataCollection.count().then((number) => {
+              expect(number).to.equal('1')
+            })
+          })
+          .tap((eventDataCollection) => {
+            const eventData = eventDataCollection.pop()
+            expect(eventData.attributes).to.equal({
+              eventName: 'container.died',
+              timePublished: testDate,
+              timeRecevied: testDate,
+              transactionId: '123123123123',
+              publisherAppName: 'git.hook',
+              publisherEventName: 'container.start',
+              org: 'anandkumarpatel',
+              stack: 'anandkumarpatel'
+            })
+          })
+      })
       .asCallback(done)
   })
 })
