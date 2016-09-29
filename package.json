@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/codenow/padme.git"
+    "url": "git://github.com/codenow/arithmancy.git"
   },
   "keywords": [
     "networking",
@@ -29,13 +29,13 @@
   "author": "anandkumarpatel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/codenow/padme/issues"
+    "url": "https://github.com/codenow/arithmancy/issues"
   },
   "engines": {
     "node": ">=4.2.2 <5",
     "npm": ">=2.14.7"
   },
-  "homepage": "https://github.com/codenow/padme",
+  "homepage": "https://github.com/codenow/arithmancy",
   "dependencies": {
     "101": "^1.6.2",
     "bluebird": "^3.0.5",
