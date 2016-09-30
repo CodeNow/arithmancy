@@ -1,12 +1,13 @@
 'use strict'
 require('loadenv')()
-
 const Code = require('code')
 const Lab = require('lab')
 const PonosServer = require('ponos').Server
+const Promise = require('bluebird')
 
 const publisher = require('external/publisher')
 
+require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
 
 const describe = lab.describe
@@ -29,7 +30,7 @@ const testSubscriber = new PonosServer({
     password: process.env.RABBITMQ_PASSWORD
   },
   events: {
-    'task.created': {
+    'container.life-cycle.started': {
       task: (job) => {
         testStub(job)
       }
@@ -37,8 +38,7 @@ const testSubscriber = new PonosServer({
   }
 })
 
-// TODO fix when we have workers
-describe.skip('rabbitmq integration test', () => {
+describe('rabbitmq integration test', () => {
   beforeEach((done) => {
     publisher.start()
       .then(() => {
@@ -49,7 +49,6 @@ describe.skip('rabbitmq integration test', () => {
 
   afterEach((done) => {
     publisher._publisher.disconnect()
-      // .delay(1000)
       .then(() => {
         testSubscriber.stop()
       })
@@ -58,17 +57,27 @@ describe.skip('rabbitmq integration test', () => {
 
   describe('check publishing', () => {
     it('should publish test job', (done) => {
-      const testId = '1234'
       const testJob = {
-        id: testId
+        host: 'http://10.0.0.1:4242',
+        inspectData: {
+          Config: {
+            Labels: {
+              githubOrgId: 987654,
+              instanceName: 'instanceName',
+              manualBuild: 'manualBuild',
+              sessionUserGithubId: 123345,
+              type: 'type'
+            }
+          }
+        }
       }
 
       testStub = (jobData) => {
-        expect(jobData.id).to.equal(testId)
+        expect(jobData).to.equal(testJob)
         done()
       }
 
-      publisher.publishEvent('task.created', testJob)
+      publisher.publishEvent('container.life-cycle.started', testJob)
     })
-  }) // end publishContainerNetworkAttached
+  }) // end check publishing
 }) // end rabbitmq integration test
