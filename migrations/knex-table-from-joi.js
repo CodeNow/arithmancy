@@ -23,6 +23,8 @@ module.exports = class KnexTableFromJoi {
       return 'string'
     } else if (joiType === 'number') {
       return 'integer'
+    } else if (joiType === 'date') {
+      return 'timestamp'
     }
 
     throw new Error(`joi type ${joiType} is not supported`)

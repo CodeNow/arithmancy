@@ -14,8 +14,8 @@ const it = lab.it
 describe('metric-event', () => {
   const testData = {
     eventName: 'container.died',
-    timePublished: new Date().toISOString(),
-    timeRecevied: new Date().toISOString(),
+    timePublished: new Date(),
+    timeRecevied: new Date(),
     transactionId: '123123123123',
     appName: process.env.APP_NAME,
     previousEventName: 'container.start',

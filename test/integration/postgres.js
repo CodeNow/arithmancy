@@ -14,7 +14,7 @@ const expect = Code.expect
 const it = lab.it
 
 describe('postgres integration test', () => {
-  const testDate = new Date().toISOString()
+  const testDate = new Date()
   const testData = {
     appName: process.env.APP_NAME,
     eventName: 'container.died',
