@@ -68,6 +68,7 @@ describe('postgres integration test', () => {
               docker_host_ip: null,
               master_instance_id: null,
               is_manual_build: null,
+              is_success: true,
               repo_name: null,
               branch_name: null
             })
