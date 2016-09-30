@@ -1,10 +1,12 @@
 'use strict'
 const Code = require('code')
 const Lab = require('lab')
+const Promise = require('bluebird')
 
 const postgresStore = require('models/persistent-stores/postgres-store')
 const MetricEvent = require('models/data-structures/metric-event')
 
+require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
 
 const afterEach = lab.afterEach
@@ -26,8 +28,8 @@ describe('postgres integration test', () => {
   }
   const testMeticEvent = new MetricEvent(testData)
 
-  beforeEach((done) => {
-    postgresStore.initialize()
+  beforeEach(() => {
+    return postgresStore.initialize()
       .then(() => {
         return postgresStore._knex('events').truncate()
           .then(() => {
@@ -39,15 +41,14 @@ describe('postgres integration test', () => {
             }
           })
       })
-      .asCallback(done)
   })
 
-  afterEach((done) => {
-    postgresStore._knex.destroy(done)
+  afterEach(() => {
+    return postgresStore._knex.destroy()
   })
 
-  it('should write entry to database', (done) => {
-    postgresStore.saveMetricEvent(testMeticEvent)
+  it('should write entry to database', () => {
+    return postgresStore.saveMetricEvent(testMeticEvent)
       .then(() => {
         return postgresStore._knex('events')
           .then((eventDataTable) => {
@@ -72,6 +73,5 @@ describe('postgres integration test', () => {
             })
           })
       })
-      .asCallback(done)
   })
 })
