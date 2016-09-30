@@ -5,7 +5,7 @@ const Code = require('code')
 const Lab = require('lab')
 const PonosServer = require('ponos').Server
 
-const publisher = require('../../lib/external/publisher.js')
+const publisher = require('external/publisher')
 
 const lab = exports.lab = Lab.script()
 
