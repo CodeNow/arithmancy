@@ -1,6 +1,6 @@
 {
   "name": "arithmancy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "metric collector",
   "main": "lib/app.js",
   "directories": {
