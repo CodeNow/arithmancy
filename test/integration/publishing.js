@@ -1,19 +1,19 @@
 'use strict'
 require('loadenv')()
-
-const Code = require('code')
 const Lab = require('lab')
 const PonosServer = require('ponos').Server
+const Promise = require('bluebird')
+const sinon = require('sinon')
 
 const publisher = require('external/publisher')
 
+require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
 
 const describe = lab.describe
 const it = lab.it
 const afterEach = lab.afterEach
 const beforeEach = lab.beforeEach
-const expect = Code.expect
 
 let testStub
 
@@ -29,7 +29,7 @@ const testSubscriber = new PonosServer({
     password: process.env.RABBITMQ_PASSWORD
   },
   events: {
-    'task.created': {
+    'container.life-cycle.started': {
       task: (job) => {
         testStub(job)
       }
@@ -37,38 +37,51 @@ const testSubscriber = new PonosServer({
   }
 })
 
-// TODO fix when we have workers
+// TODO: fix when we publish an event
 describe.skip('rabbitmq integration test', () => {
-  beforeEach((done) => {
-    publisher.start()
+  beforeEach(() => {
+    testStub = sinon.stub()
+    return publisher.start()
       .then(() => {
-        testSubscriber.start()
+        return testSubscriber.start()
       })
-      .asCallback(done)
   })
 
-  afterEach((done) => {
-    publisher._publisher.disconnect()
-      // .delay(1000)
+  afterEach(() => {
+    return publisher._publisher.disconnect()
       .then(() => {
-        testSubscriber.stop()
+        return testSubscriber.stop()
       })
-      .asCallback(done)
   })
 
   describe('check publishing', () => {
     it('should publish test job', (done) => {
-      const testId = '1234'
       const testJob = {
-        id: testId
+        host: 'http://10.0.0.1:4242',
+        inspectData: {
+          Config: {
+            Labels: {
+              githubOrgId: 987654,
+              instanceName: 'instanceName',
+              manualBuild: 'manualBuild',
+              sessionUserGithubId: 123345,
+              type: 'type'
+            }
+          }
+        }
       }
 
-      testStub = (jobData) => {
-        expect(jobData.id).to.equal(testId)
-        done()
-      }
+      publisher.publishEvent('container.life-cycle.started', testJob)
 
-      publisher.publishEvent('task.created', testJob)
+      return Promise.try(function loop () {
+        if (testStub.callCount !== 1) {
+          return Promise.delay(500)
+        }
+      })
+      .then(() => {
+        sinon.assert.calledOnce(testStub)
+        sinon.assert.calledWith(testStub, testJob)
+      })
     })
-  }) // end publishContainerNetworkAttached
+  }) // end check publishing
 }) // end rabbitmq integration test
