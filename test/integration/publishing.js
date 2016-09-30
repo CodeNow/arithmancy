@@ -1,9 +1,9 @@
 'use strict'
 require('loadenv')()
-const Code = require('code')
 const Lab = require('lab')
 const PonosServer = require('ponos').Server
 const Promise = require('bluebird')
+const sinon = require('sinon')
 
 const publisher = require('external/publisher')
 
@@ -14,7 +14,6 @@ const describe = lab.describe
 const it = lab.it
 const afterEach = lab.afterEach
 const beforeEach = lab.beforeEach
-const expect = Code.expect
 
 let testStub
 
@@ -39,20 +38,19 @@ const testSubscriber = new PonosServer({
 })
 
 describe('rabbitmq integration test', () => {
-  beforeEach((done) => {
-    publisher.start()
+  beforeEach(() => {
+    testStub = sinon.stub()
+    return publisher.start()
       .then(() => {
-        testSubscriber.start()
+        return testSubscriber.start()
       })
-      .asCallback(done)
   })
 
-  afterEach((done) => {
-    publisher._publisher.disconnect()
+  afterEach(() => {
+    return publisher._publisher.disconnect()
       .then(() => {
-        testSubscriber.stop()
+        return testSubscriber.stop()
       })
-      .asCallback(done)
   })
 
   describe('check publishing', () => {
@@ -72,12 +70,17 @@ describe('rabbitmq integration test', () => {
         }
       }
 
-      testStub = (jobData) => {
-        expect(jobData).to.equal(testJob)
-        done()
-      }
-
       publisher.publishEvent('container.life-cycle.started', testJob)
+
+      return Promise.try(function loop () {
+        if (testStub.callCount !== 1) {
+          return Promise.delay(500)
+        }
+      })
+      .then(() => {
+        sinon.assert.calledOnce(testStub)
+        sinon.assert.calledWith(testStub, testJob)
+      })
     })
   }) // end check publishing
 }) // end rabbitmq integration test
