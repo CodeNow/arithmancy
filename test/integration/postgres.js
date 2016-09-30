@@ -66,6 +66,7 @@ describe('postgres integration test', () => {
               big_poppa_org_id: null,
               docker_host_ip: null,
               master_instance_id: null,
+              is_manual: null,
               repo_name: null,
               branch_name: null
             })
