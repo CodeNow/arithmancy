@@ -10,9 +10,9 @@ const describe = lab.describe
 const expect = Code.expect
 const it = lab.it
 
-const logger = require('../../lib/logger.js')
+const logger = require('logger')
 
-describe('logger.js unit test', () => {
+describe('logger unit test', () => {
   describe('loading', () => {
     it('should add props to logger', (done) => {
       const log = logger.child({ test: 'prop' })

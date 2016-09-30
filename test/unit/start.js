@@ -18,7 +18,7 @@ const beforeEach = lab.beforeEach
 const describe = lab.describe
 const it = lab.it
 
-describe('start.js unit test', () => {
+describe('start unit test', () => {
   describe('flow', () => {
     beforeEach((done) => {
       sinon.stub(publisher, 'start')
@@ -74,4 +74,4 @@ describe('start.js unit test', () => {
       })
     })
   }) // end flow
-}) // end start.js unit test
+}) // end start unit test

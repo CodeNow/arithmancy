@@ -6,8 +6,8 @@ const RabbitConnector = require('ponos/lib/rabbitmq')
 const sinon = require('sinon')
 const Promise = require('bluebird')
 
-const publishedEventList = require('../../../lib/external/published-event-list.js')
-const publisher = require('../../../lib/external/publisher.js')
+const publishedEventList = require('external/published-event-list')
+const publisher = require('external/publisher')
 
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
@@ -18,7 +18,7 @@ const describe = lab.describe
 const expect = Code.expect
 const it = lab.it
 
-describe('publisher.js unit test', () => {
+describe('publisher unit test', () => {
   describe('start', () => {
     beforeEach((done) => {
       sinon.stub(RabbitConnector.prototype, 'connect')
@@ -105,4 +105,4 @@ describe('publisher.js unit test', () => {
       done()
     })
   }) // end publishTask
-}) // end publisher.js unit test
+}) // end publisher unit test
