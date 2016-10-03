@@ -5,6 +5,7 @@ const Promise = require('bluebird')
 const sinon = require('sinon')
 const RabbitConnector = require('ponos/lib/rabbitmq')
 
+const MetricWorker = require('workers/metric.worker')
 const ContainerLifeCycleStarted = require('workers/container.life-cycle.started')
 const workerServer = require('external/worker-server')
 
@@ -28,7 +29,7 @@ const testPublisher = new RabbitConnector({
 describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
-      sinon.stub(ContainerLifeCycleStarted, 'task')
+      sinon.stub(MetricWorker, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -36,7 +37,7 @@ describe('rabbitmq integration test', () => {
     })
 
     afterEach(() => {
-      ContainerLifeCycleStarted.task.restore()
+      MetricWorker.task.restore()
       return testPublisher.disconnect()
         .then(() => {
           return workerServer.stop()
@@ -44,7 +45,7 @@ describe('rabbitmq integration test', () => {
     })
 
     it('should call worker', (done) => {
-      ContainerLifeCycleStarted.task.resolves()
+      MetricWorker.task.resolves()
       const testJob = {
         host: 'http://10.0.0.1:4242',
         inspectData: {
@@ -66,8 +67,8 @@ describe('rabbitmq integration test', () => {
         }
       })
       .then(() => {
-        sinon.assert.calledOnce(ContainerLifeCycleStarted.task)
-        sinon.assert.calledWith(ContainerLifeCycleStarted.task, testJob)
+        sinon.assert.calledOnce(MetricWorker.task)
+        sinon.assert.calledWith(MetricWorker.task, testJob)
       })
     })
   }) // end check subscribing
