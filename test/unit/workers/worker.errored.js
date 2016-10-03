@@ -71,7 +71,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(MetricTracker.track, {
       appName: meta.appId,
       eventName: job.originalWorkerName,
-      isSuccess: false,
+      isWorkerSuccessfull: false,
       previousEventName: job.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
@@ -95,7 +95,7 @@ describe('worker.errored', () => {
       eventName: containerStartedJob.originalWorkerName,
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,
       githubUserId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.sessionUserGithubId,
-      isSuccess: false,
+      isWorkerSuccessfull: false,
       isManual: containerStartedJob.originalJobPayload.inspectData.Config.Labels.manualBuild,
       previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
