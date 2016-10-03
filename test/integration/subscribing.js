@@ -67,7 +67,7 @@ describe('rabbitmq integration test', () => {
       }
       testPublisher.publishEvent('container.life-cycle.started', testJob)
       return Promise.try(function loop () {
-        if (ContainerLifeCycleStarted.task.callCount !== 1) {
+        if (ContainerLifeCycleStarted.task.callCount === 0) {
           return Promise.delay(500)
         }
       })
