@@ -96,7 +96,7 @@ describe('worker.errored', () => {
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,
       githubUserId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.sessionUserGithubId,
       isWorkerSuccessfull: false,
-      isManual: containerStartedJob.originalJobPayload.inspectData.Config.Labels.manualBuild,
+      isManualBuild: containerStartedJob.originalJobPayload.inspectData.Config.Labels.manualBuild,
       previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
