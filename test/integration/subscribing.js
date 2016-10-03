@@ -32,6 +32,7 @@ describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
       sinon.stub(ContainerLifeCycleStarted._Worker.prototype, 'task')
+      sinon.spy(ContainerLifeCycleStarted, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -40,6 +41,7 @@ describe('rabbitmq integration test', () => {
 
     afterEach(() => {
       ContainerLifeCycleStarted._Worker.prototype.task.restore()
+      ContainerLifeCycleStarted.task.restore()
       return testPublisher.disconnect()
         .then(() => {
           return workerServer.stop()
@@ -70,7 +72,9 @@ describe('rabbitmq integration test', () => {
       })
       .then(() => {
         sinon.assert.calledOnce(ContainerLifeCycleStarted._Worker.prototype.task)
-        sinon.assert.calledWith(ContainerLifeCycleStarted._Worker.prototype.task, testJob)
+        sinon.assert.calledWithExactly(ContainerLifeCycleStarted._Worker.prototype.task)
+        sinon.assert.calledOnce(ContainerLifeCycleStarted.task)
+        sinon.assert.calledWithExactly(ContainerLifeCycleStarted.task, testJob)
       })
     })
   }) // end check subscribing
