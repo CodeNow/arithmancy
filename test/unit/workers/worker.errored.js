@@ -4,6 +4,7 @@ const Lab = require('lab')
 const MetricTracker = require('models/metric-tracker')
 const WorkerErrored = require('workers/worker.errored')
 const ContainerLifeCycleStarted = require('workers/container.life-cycle.started')
+const ContainerNetworkStarted = require('workers/container.network.attached')
 
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
@@ -48,6 +49,7 @@ describe('worker.errored', () => {
     sinon.spy(WorkerErrored._Worker.prototype, 'task')
     sinon.stub(MetricTracker, 'track')
     sinon.spy(ContainerLifeCycleStarted, 'parseTags')
+    sinon.spy(ContainerNetworkStarted, 'parseTags')
     done()
   })
 
@@ -55,6 +57,7 @@ describe('worker.errored', () => {
     WorkerErrored._Worker.prototype.task.restore()
     MetricTracker.track.restore()
     ContainerLifeCycleStarted.parseTags.restore()
+    ContainerNetworkStarted.parseTags.restore()
     done()
   })
 
@@ -101,6 +104,40 @@ describe('worker.errored', () => {
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
       transactionId: containerStartedJob.tx
+    })
+    done()
+  })
+
+  it('should call container.network.attached parse tags', (done) => {
+    const containerNetworkAttached = Object.assign({}, job, {
+      originalWorkerName: 'container.network.attached',
+      originalJobPayload: {
+        id: 'containerid-1',
+        inspectData: {
+          Config: {
+            Labels: {
+              instanceId: 'inst-1',
+              githubOrgId: 88888
+            }
+          }
+        }
+      }
+    })
+    WorkerErrored.task(containerNetworkAttached, meta)
+    sinon.assert.calledOnce(ContainerNetworkStarted.parseTags)
+    sinon.assert.calledWithExactly(ContainerNetworkStarted.parseTags, containerNetworkAttached.originalJobPayload)
+    sinon.assert.calledOnce(MetricTracker.track)
+    sinon.assert.calledWithExactly(MetricTracker.track, {
+      appName: meta.appId,
+      containerId: containerNetworkAttached.originalJobPayload.id,
+      eventName: containerNetworkAttached.originalWorkerName,
+      githubOrgId: containerNetworkAttached.originalJobPayload.inspectData.Config.Labels.githubOrgId,
+      instanceId: containerNetworkAttached.originalJobPayload.inspectData.Config.Labels.instanceId,
+      isWorkerSuccessfull: false,
+      previousEventName: containerNetworkAttached.originalJobMeta.headers.publisherWorkerName,
+      timePublished: new Date(meta.timestamp),
+      timeRecevied: sinon.match.date,
+      transactionId: containerNetworkAttached.tx
     })
     done()
   })
