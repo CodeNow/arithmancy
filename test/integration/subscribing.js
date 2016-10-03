@@ -22,7 +22,10 @@ const testPublisher = new RabbitConnector({
   port: process.env.RABBITMQ_PORT,
   username: process.env.RABBITMQ_USERNAME,
   password: process.env.RABBITMQ_PASSWORD,
-  events: ['container.life-cycle.started']
+  events: [
+    'container.life-cycle.started',
+    'container.network.attached',
+    'worker.errored']
 })
 
 describe('rabbitmq integration test', () => {
@@ -52,7 +55,7 @@ describe('rabbitmq integration test', () => {
             Labels: {
               githubOrgId: 987654,
               instanceName: 'instanceName',
-              manualBuild: 'manualBuild',
+              manualBuild: true,
               sessionUserGithubId: 123345,
               type: 'type'
             }
