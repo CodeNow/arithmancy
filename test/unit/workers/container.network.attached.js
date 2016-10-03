@@ -2,14 +2,10 @@
 const Lab = require('lab')
 const Code = require('code')
 
-const MetricTracker = require('models/metric-tracker')
 const ContainerNetworkAttached = require('workers/container.network.attached')
 
-const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-const afterEach = lab.afterEach
-const beforeEach = lab.beforeEach
 const describe = lab.describe
 const it = lab.it
 const expect = Code.expect
@@ -51,6 +47,13 @@ describe('container.network.attached', () => {
     const worker = new ContainerNetworkAttached._Worker(job, meta)
     const parsedTags = worker._parseTags()
     expect(tags).to.equal(parsedTags)
+    done()
+  })
+
+  it('should return correct eventName', (done) => {
+    const worker = new ContainerNetworkAttached._Worker(job, meta)
+    const eventName = worker._getEventName()
+    expect(eventName).to.equal('container.network.attached')
     done()
   })
 })
