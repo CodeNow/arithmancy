@@ -12,6 +12,7 @@ const MetricEvent = require('models/data-structures/metric-event')
 const postgresStore = require('models/persistent-stores/postgres-store')
 const server = require('external/worker-server')
 const publisher = require('external/publisher')
+const UserContainerLifeCycleStartedEvent = require('../fixtures/user-container.life-cycle.started')
 
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
@@ -62,19 +63,22 @@ describe('container.life-cycle.started functional tests', () => {
       .then(() => {
         return server.stop()
       })
-  })
-
-  it('should handle build container.life-cycle.started', (done) => {
-    testPublisher.publishEvent('container.life-cycle.started', {})
-    done()
+      .then(() => {
+        return testPublisher.disconnect()
+      })
   })
 
   it('should handle user container.life-cycle.started', (done) => {
+    testPublisher.publishEvent('container.life-cycle.started', UserContainerLifeCycleStartedEvent)
+    done()
+  })
+
+  it.skip('should handle build container.life-cycle.started', (done) => {
     testPublisher.publishEvent('container.life-cycle.started', {})
     done()
   })
 
-  it('should handle invalid container.life-cycle.started', (done) => {
+  it.skip('should handle invalid container.life-cycle.started', (done) => {
     testPublisher.publishEvent('container.life-cycle.started', {})
     done()
   })
