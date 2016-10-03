@@ -25,7 +25,8 @@ const testPublisher = new RabbitConnector({
   events: [
     'container.life-cycle.started',
     'container.network.attached',
-    'worker.errored']
+    'worker.errored'
+  ]
 })
 
 describe('rabbitmq integration test', () => {
@@ -74,7 +75,7 @@ describe('rabbitmq integration test', () => {
         sinon.assert.calledOnce(ContainerLifeCycleStarted._Worker.prototype.task)
         sinon.assert.calledWithExactly(ContainerLifeCycleStarted._Worker.prototype.task)
         sinon.assert.calledOnce(ContainerLifeCycleStarted.task)
-        sinon.assert.calledWithExactly(ContainerLifeCycleStarted.task, testJob)
+        sinon.assert.calledWith(ContainerLifeCycleStarted.task, testJob)
       })
     })
   }) // end check subscribing
