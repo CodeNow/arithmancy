@@ -29,7 +29,7 @@ const testPublisher = new RabbitConnector({
 describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
-      sinon.stub(MetricWorker, 'task')
+      sinon.stub(MetricWorker.prototype, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -37,7 +37,7 @@ describe('rabbitmq integration test', () => {
     })
 
     afterEach(() => {
-      MetricWorker.task.restore()
+      MetricWorker.prototype.task.restore()
       return testPublisher.disconnect()
         .then(() => {
           return workerServer.stop()
@@ -45,7 +45,7 @@ describe('rabbitmq integration test', () => {
     })
 
     it('should call worker', (done) => {
-      MetricWorker.task.resolves()
+      MetricWorker.prototype.task.resolves()
       const testJob = {
         host: 'http://10.0.0.1:4242',
         inspectData: {
@@ -67,8 +67,8 @@ describe('rabbitmq integration test', () => {
         }
       })
       .then(() => {
-        sinon.assert.calledOnce(MetricWorker.task)
-        sinon.assert.calledWith(MetricWorker.task, testJob)
+        sinon.assert.calledOnce(MetricWorker.prototype.task)
+        sinon.assert.calledWith(MetricWorker.prototype.task, testJob)
       })
     })
   }) // end check subscribing
