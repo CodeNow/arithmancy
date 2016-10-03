@@ -39,7 +39,7 @@ describe('worker.errored', () => {
     error: {
       msg: 'Failed to start'
     },
-    tx: 'job-tid'
+    tid: 'job-tid'
   }
   const meta = {
     appId: 'sauron',
@@ -78,7 +78,7 @@ describe('worker.errored', () => {
       previousEventName: job.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
-      transactionId: job.tx
+      transactionId: job.tid
     })
     done()
   })
@@ -103,7 +103,7 @@ describe('worker.errored', () => {
       previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
-      transactionId: containerStartedJob.tx
+      transactionId: containerStartedJob.tid
     })
     done()
   })
@@ -137,7 +137,7 @@ describe('worker.errored', () => {
       previousEventName: containerNetworkAttached.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
-      transactionId: containerNetworkAttached.tx
+      transactionId: containerNetworkAttached.tid
     })
     done()
   })
