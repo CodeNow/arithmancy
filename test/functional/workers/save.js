@@ -8,6 +8,8 @@ const RabbitConnector = require('ponos/lib/rabbitmq')
 const sinon = require('sinon')
 const url = require('url')
 
+const BuildContainerLifeCycleStartedEvent = require('../fixtures/build-container.life-cycle.started')
+const InvalidContainerLifeCycleStartedEvent = require('../fixtures/invalid-container.life-cycle.started')
 const logger = require('logger')
 const postgresStore = require('models/persistent-stores/postgres-store')
 const publisher = require('external/publisher')
@@ -25,7 +27,6 @@ const expect = Code.expect
 const it = lab.it
 
 describe('container.life-cycle.started functional tests', () => {
-  const testEventName = 'instance.container.started'
   const testPublisherName = 'test container.life-cycle.started'
   const testPublisher = new RabbitConnector({
     name: testPublisherName,
@@ -74,7 +75,10 @@ describe('container.life-cycle.started functional tests', () => {
   })
 
   it('should handle user container.life-cycle.started', () => {
+    const testEventName = 'instance.container.started'
+
     testPublisher.publishEvent('container.life-cycle.started', UserContainerLifeCycleStartedEvent)
+
     return Promise.try(function loop () {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
@@ -91,17 +95,10 @@ describe('container.life-cycle.started functional tests', () => {
       const testOrgId = parseInt(labels.githubOrgId, 10)
       const testUserId = parseInt(labels.sessionUserGithubId, 10)
       const testHost = url.parse(UserContainerLifeCycleStartedEvent.host).hostname
-      expect(eventData.id).to.equal(1)
-      expect(eventData.event_name).to.equal(testEventName)
-      expect(eventData.app_name).to.equal(testPublisherName)
-      expect(eventData.branch_name).to.equal(labels.instanceName)
-      expect(eventData.docker_host_ip).to.equal(testHost)
-      expect(eventData.github_org_id).to.equal(testOrgId)
-      expect(eventData.github_user_id).to.equal(testUserId)
       expect(eventData).to.include({
         id: 1,
         event_name: testEventName,
-        app_name: testPublisherName,
+        app_name: process.env.APP_NAME,
         branch_name: labels.instanceName,
         docker_host_ip: url.parse(UserContainerLifeCycleStartedEvent.host).hostname,
         github_org_id: parseInt(labels.githubOrgId, 10),
@@ -110,7 +107,7 @@ describe('container.life-cycle.started functional tests', () => {
 
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
-        appName: testPublisherName,
+        appName: process.env.APP_NAME,
         branchName: labels.instanceName,
         dockerHostIp: testHost,
         eventName: testEventName,
@@ -122,8 +119,11 @@ describe('container.life-cycle.started functional tests', () => {
     })
   })
 
-  it.skip('should handle build container.life-cycle.started', (done) => {
-    testPublisher.publishEvent('container.life-cycle.started', UserContainerLifeCycleStartedEvent)
+  it('should handle build container.life-cycle.started', () => {
+    const testEventName = 'container.image-builder.started'
+
+    testPublisher.publishEvent('container.life-cycle.started', BuildContainerLifeCycleStartedEvent)
+
     return Promise.try(function loop () {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
@@ -136,43 +136,42 @@ describe('container.life-cycle.started functional tests', () => {
     .then((eventDataTable) => {
       expect(eventDataTable).to.have.length(1)
       const eventData = eventDataTable.pop()
-      const labels = UserContainerLifeCycleStartedEvent.inspectData.Config.Labels
+      const labels = BuildContainerLifeCycleStartedEvent.inspectData.Config.Labels
       const testOrgId = parseInt(labels.githubOrgId, 10)
       const testUserId = parseInt(labels.sessionUserGithubId, 10)
-      const testHost = url.parse(UserContainerLifeCycleStartedEvent.host).hostname
-      expect(eventData.id).to.equal(1)
-      expect(eventData.event_name).to.equal(testEventName)
-      expect(eventData.app_name).to.equal(testPublisherName)
-      expect(eventData.branch_name).to.equal(labels.instanceName)
-      expect(eventData.docker_host_ip).to.equal(testHost)
-      expect(eventData.github_org_id).to.equal(testOrgId)
-      expect(eventData.github_user_id).to.equal(testUserId)
+      const testHost = url.parse(BuildContainerLifeCycleStartedEvent.host).hostname
+
       expect(eventData).to.include({
         id: 1,
         event_name: testEventName,
-        app_name: testPublisherName,
-        branch_name: labels.instanceName,
-        docker_host_ip: url.parse(UserContainerLifeCycleStartedEvent.host).hostname,
+        app_name: process.env.APP_NAME,
+        docker_host_ip: url.parse(BuildContainerLifeCycleStartedEvent.host).hostname,
         github_org_id: parseInt(labels.githubOrgId, 10),
         github_user_id: parseInt(labels.sessionUserGithubId, 10)
       })
 
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
-        appName: testPublisherName,
-        branchName: labels.instanceName,
+        appName: process.env.APP_NAME,
         dockerHostIp: testHost,
         eventName: testEventName,
         githubOrgId: testOrgId,
         githubUserId: testUserId,
-        isManualBuild: undefined,
-        previousEventName: undefined
+        isManualBuild: true,
+        previousEventName: undefined,
+        branchName: undefined
       })
     })
   })
 
-  it.skip('should handle invalid container.life-cycle.started', (done) => {
-    testPublisher.publishEvent('container.life-cycle.started', {})
-    done()
+  it('should handle invalid container.life-cycle.started', (done) => {
+    testPublisher.publishEvent('container.life-cycle.started', InvalidContainerLifeCycleStartedEvent)
+
+    return postgresStore._knex('events')
+      .then((eventDataTable) => {
+        expect(eventDataTable).to.have.length(0)
+
+        sinon.assert.neverCalledWith(monitor.increment, 'container.life-cycle.started')
+      })
   })
 }) // end container.life-cycle.started functional tests
