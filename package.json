@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "all-test": "npm run unit && npm run functional && npm run integration",
+    "all-test": "NODE_PATH=./lib NODE_ENV=test lab -c -v -l ./test",
     "coverage": "NODE_PATH=./lib NODE_ENV=test lab -c -r html -o ./coverage/index.html",
     "create-db": "NODE_PATH=./lib node ./migrations/create-db.js",
     "functional": "NODE_PATH=./lib NODE_ENV=test lab -m 5000 -l -v test/functional",
