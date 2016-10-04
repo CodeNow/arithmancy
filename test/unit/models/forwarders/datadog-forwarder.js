@@ -1,6 +1,7 @@
 'use strict'
 const Code = require('code')
 const Lab = require('lab')
+const put = require('101/put')
 const sinon = require('sinon')
 
 const datadogForwarder = require('models/forwarders/datadog-forwarder')
@@ -37,10 +38,12 @@ describe('datadog-forworder unit test', () => {
       }
       const testMetricEvent = {
         getEventData: () => {
-          return {
-            name: testName,
-            tags: testTags
-          }
+          return put({
+            eventName: testName
+          }, testTags)
+        },
+        getTags: () => {
+          return testTags
         }
       }
 

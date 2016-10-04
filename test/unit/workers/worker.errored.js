@@ -23,7 +23,7 @@ describe('worker.errored', () => {
           Labels: {
             githubOrgId: 123123,
             sessionUserGithubId: 99999,
-            manualBuild: false,
+            manualBuild: 'false',
             instanceName: 'api'
           }
         }
@@ -99,7 +99,7 @@ describe('worker.errored', () => {
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,
       githubUserId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.sessionUserGithubId,
       isWorkerSuccessfull: false,
-      isManualBuild: containerStartedJob.originalJobPayload.inspectData.Config.Labels.manualBuild,
+      isManualBuild: false,
       previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
