@@ -25,6 +25,7 @@ const testPublisher = new RabbitConnector({
   events: [
     'container.life-cycle.started',
     'container.network.attached',
+    'organization.created',
     'worker.errored'
   ]
 })
