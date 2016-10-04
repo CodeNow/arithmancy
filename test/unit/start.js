@@ -6,7 +6,6 @@ const sinon = require('sinon')
 
 const datadogForwarder = require('models/forwarders/datadog-forwarder')
 const postgresStore = require('models/persistent-stores/postgres-store')
-const publisher = require('external/publisher')
 const start = require('start')
 const workerServer = require('external/worker-server')
 
@@ -21,7 +20,6 @@ const it = lab.it
 describe('start unit test', () => {
   describe('flow', () => {
     beforeEach((done) => {
-      sinon.stub(publisher, 'start')
       sinon.stub(datadogForwarder, 'initialize')
       sinon.stub(postgresStore, 'initialize')
       sinon.stub(workerServer, 'start')
@@ -33,7 +31,6 @@ describe('start unit test', () => {
     afterEach((done) => {
       datadogForwarder.initialize.restore()
       postgresStore.initialize.restore()
-      publisher.start.restore()
       workerServer.start.restore()
       ErrorCat.report.restore()
       process.exit.restore()
@@ -41,7 +38,6 @@ describe('start unit test', () => {
     })
 
     it('should start publisher and server', (done) => {
-      publisher.start.resolves()
       workerServer.start.resolves()
       datadogForwarder.initialize.resolves()
       postgresStore.initialize.resolves()
@@ -51,7 +47,6 @@ describe('start unit test', () => {
         sinon.assert.callOrder(
           datadogForwarder.initialize,
           postgresStore.initialize,
-          publisher.start,
           workerServer.start
         )
         sinon.assert.notCalled(process.exit)
@@ -69,7 +64,6 @@ describe('start unit test', () => {
           ErrorCat.report,
           process.exit
         )
-
         done()
       })
     })
