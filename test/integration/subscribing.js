@@ -6,6 +6,7 @@ const sinon = require('sinon')
 const RabbitConnector = require('ponos/lib/rabbitmq')
 
 const ContainerLifeCycleStarted = require('workers/container.life-cycle.started')
+const SubscribedEventList = require('external/subscribed-event-list')
 const workerServer = require('external/worker-server')
 
 require('sinon-as-promised')(Promise)
@@ -22,11 +23,7 @@ const testPublisher = new RabbitConnector({
   port: process.env.RABBITMQ_PORT,
   username: process.env.RABBITMQ_USERNAME,
   password: process.env.RABBITMQ_PASSWORD,
-  events: [
-    'container.life-cycle.started',
-    'container.network.attached',
-    'worker.errored'
-  ]
+  events: SubscribedEventList
 })
 
 describe('rabbitmq integration test', () => {
@@ -58,7 +55,7 @@ describe('rabbitmq integration test', () => {
             Labels: {
               githubOrgId: 987654,
               instanceName: 'instanceName',
-              manualBuild: true,
+              manualBuild: 'true',
               sessionUserGithubId: 123345,
               type: 'type'
             }

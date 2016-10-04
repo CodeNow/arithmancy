@@ -23,7 +23,7 @@ describe('worker.errored', () => {
           Labels: {
             githubOrgId: 123123,
             sessionUserGithubId: 99999,
-            manualBuild: false,
+            manualBuild: 'false',
             instanceName: 'api'
           }
         }
@@ -72,7 +72,7 @@ describe('worker.errored', () => {
     WorkerErrored.task(job, meta)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: meta.appId,
+      appName: process.env.APP_NAME,
       eventName: job.originalWorkerName,
       isWorkerSuccessfull: false,
       previousEventName: job.originalJobMeta.headers.publisherWorkerName,
@@ -92,14 +92,14 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(ContainerLifeCycleStarted.parseTags, containerStartedJob.originalJobPayload)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: meta.appId,
+      appName: process.env.APP_NAME,
       branchName: containerStartedJob.originalJobPayload.inspectData.Config.Labels.instanceName,
       dockerHostIp: '127.0.0.1',
       eventName: containerStartedJob.originalWorkerName,
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,
       githubUserId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.sessionUserGithubId,
       isWorkerSuccessfull: false,
-      isManualBuild: containerStartedJob.originalJobPayload.inspectData.Config.Labels.manualBuild,
+      isManualBuild: false,
       previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
       timePublished: new Date(meta.timestamp),
       timeRecevied: sinon.match.date,
@@ -128,7 +128,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(ContainerNetworkStarted.parseTags, containerNetworkAttached.originalJobPayload)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: meta.appId,
+      appName: process.env.APP_NAME,
       containerId: containerNetworkAttached.originalJobPayload.id,
       eventName: containerNetworkAttached.originalWorkerName,
       githubOrgId: containerNetworkAttached.originalJobPayload.inspectData.Config.Labels.githubOrgId,

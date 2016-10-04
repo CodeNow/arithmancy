@@ -15,6 +15,7 @@ const postgresStore = require('models/persistent-stores/postgres-store')
 const publisher = require('external/publisher')
 const server = require('external/worker-server')
 const startArithmancy = require('start')
+const SubscribedEventList = require('external/subscribed-event-list')
 const UserContainerLifeCycleStartedEvent = require('../fixtures/user-container.life-cycle.started')
 
 require('sinon-as-promised')(Promise)
@@ -35,7 +36,7 @@ describe('container.life-cycle.started functional tests', () => {
     port: process.env.RABBITMQ_PORT,
     username: process.env.RABBITMQ_USERNAME,
     password: process.env.RABBITMQ_PASSWORD,
-    events: ['container.life-cycle.started']
+    events: SubscribedEventList
   })
 
   beforeEach(() => {
