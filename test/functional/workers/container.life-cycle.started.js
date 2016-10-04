@@ -12,7 +12,6 @@ const BuildContainerLifeCycleStartedEvent = require('../fixtures/build-container
 const InvalidContainerLifeCycleStartedEvent = require('../fixtures/invalid-container.life-cycle.started')
 const logger = require('logger')
 const postgresStore = require('models/persistent-stores/postgres-store')
-const publisher = require('external/publisher')
 const server = require('external/worker-server')
 const startArithmancy = require('start')
 const SubscribedEventList = require('external/subscribed-event-list')
@@ -64,9 +63,6 @@ describe('container.life-cycle.started functional tests', () => {
   afterEach(() => {
     monitor.increment.restore()
     return postgresStore._knex.destroy()
-      .then(() => {
-        return publisher._publisher.disconnect()
-      })
       .then(() => {
         return server.stop()
       })
