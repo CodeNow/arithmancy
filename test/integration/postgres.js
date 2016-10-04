@@ -65,6 +65,7 @@ describe('postgres integration test', () => {
               github_org_id: 123123,
               github_user_id: null,
               big_poppa_org_id: null,
+              big_poppa_user_id: null,
               docker_host_ip: null,
               master_instance_id: null,
               instance_id: null,
