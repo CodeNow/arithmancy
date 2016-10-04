@@ -5,7 +5,7 @@ const Promise = require('bluebird')
 const sinon = require('sinon')
 const RabbitConnector = require('ponos/lib/rabbitmq')
 
-const ContainerLifeCycleStarted = require('workers/container.life-cycle.started')
+const ContainerLifeCycle = require('workers/container.life-cycle')
 const SubscribedEventList = require('external/subscribed-event-list')
 const workerServer = require('external/worker-server')
 
@@ -29,8 +29,8 @@ const testPublisher = new RabbitConnector({
 describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
-      sinon.stub(ContainerLifeCycleStarted._Worker.prototype, 'task')
-      sinon.spy(ContainerLifeCycleStarted, 'task')
+      sinon.stub(ContainerLifeCycle._Worker.prototype, 'task')
+      sinon.spy(ContainerLifeCycle, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -38,8 +38,8 @@ describe('rabbitmq integration test', () => {
     })
 
     afterEach(() => {
-      ContainerLifeCycleStarted._Worker.prototype.task.restore()
-      ContainerLifeCycleStarted.task.restore()
+      ContainerLifeCycle._Worker.prototype.task.restore()
+      ContainerLifeCycle.task.restore()
       return testPublisher.disconnect()
         .then(() => {
           return workerServer.stop()
@@ -47,7 +47,7 @@ describe('rabbitmq integration test', () => {
     })
 
     it('should call worker', (done) => {
-      ContainerLifeCycleStarted._Worker.prototype.task.resolves()
+      ContainerLifeCycle._Worker.prototype.task.resolves()
       const testJob = {
         host: 'http://10.0.0.1:4242',
         inspectData: {
@@ -64,15 +64,15 @@ describe('rabbitmq integration test', () => {
       }
       testPublisher.publishEvent('container.life-cycle.started', testJob)
       return Promise.try(function loop () {
-        if (ContainerLifeCycleStarted.task.callCount === 0) {
+        if (ContainerLifeCycle.task.callCount === 0) {
           return Promise.delay(500)
         }
       })
       .then(() => {
-        sinon.assert.calledOnce(ContainerLifeCycleStarted._Worker.prototype.task)
-        sinon.assert.calledWithExactly(ContainerLifeCycleStarted._Worker.prototype.task)
-        sinon.assert.calledOnce(ContainerLifeCycleStarted.task)
-        sinon.assert.calledWith(ContainerLifeCycleStarted.task, testJob)
+        sinon.assert.calledOnce(ContainerLifeCycle._Worker.prototype.task)
+        sinon.assert.calledWithExactly(ContainerLifeCycle._Worker.prototype.task)
+        sinon.assert.calledOnce(ContainerLifeCycle.task)
+        sinon.assert.calledWith(ContainerLifeCycle.task, testJob)
       })
     })
   }) // end check subscribing

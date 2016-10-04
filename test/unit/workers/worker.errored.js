@@ -3,7 +3,7 @@ const Lab = require('lab')
 
 const MetricTracker = require('models/metric-tracker')
 const WorkerErrored = require('workers/worker.errored')
-const ContainerLifeCycleStarted = require('workers/container.life-cycle.started')
+const ContainerLifeCycle = require('workers/container.life-cycle')
 const ContainerNetworkStarted = require('workers/container.network.attached')
 
 const sinon = require('sinon')
@@ -48,7 +48,7 @@ describe('worker.errored', () => {
   beforeEach((done) => {
     sinon.spy(WorkerErrored._Worker.prototype, 'task')
     sinon.stub(MetricTracker, 'track')
-    sinon.spy(ContainerLifeCycleStarted, 'parseTags')
+    sinon.spy(ContainerLifeCycle, 'parseTags')
     sinon.spy(ContainerNetworkStarted, 'parseTags')
     done()
   })
@@ -56,7 +56,7 @@ describe('worker.errored', () => {
   afterEach((done) => {
     WorkerErrored._Worker.prototype.task.restore()
     MetricTracker.track.restore()
-    ContainerLifeCycleStarted.parseTags.restore()
+    ContainerLifeCycle.parseTags.restore()
     ContainerNetworkStarted.parseTags.restore()
     done()
   })
@@ -88,8 +88,8 @@ describe('worker.errored', () => {
       originalWorkerName: 'container.life-cycle.started'
     })
     WorkerErrored.task(containerStartedJob, meta)
-    sinon.assert.calledOnce(ContainerLifeCycleStarted.parseTags)
-    sinon.assert.calledWithExactly(ContainerLifeCycleStarted.parseTags, containerStartedJob.originalJobPayload)
+    sinon.assert.calledOnce(ContainerLifeCycle.parseTags)
+    sinon.assert.calledWithExactly(ContainerLifeCycle.parseTags, containerStartedJob.originalJobPayload)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
       appName: meta.appId,

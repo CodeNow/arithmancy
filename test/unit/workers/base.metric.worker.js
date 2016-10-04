@@ -4,7 +4,6 @@ const Code = require('code')
 
 const BaseMetricWorker = require('workers/base.metric.worker')
 const MetricTracker = require('models/metric-tracker')
-const WorkerStopError = require('error-cat/errors/worker-stop-error')
 const sinon = require('sinon')
 require('sinon-as-promised')(require('bluebird'))
 
@@ -62,16 +61,19 @@ describe('base.metric.worker', () => {
       sinon.stub(MetricTracker, 'track').resolves()
       done()
     })
+
     afterEach((done) => {
       BaseMetricWorker.prototype._getEventName.restore()
       BaseMetricWorker.prototype._parseTags.restore()
       MetricTracker.track.restore()
       done()
     })
-    it('should throw if _getEventName returns null', (done) => {
+
+    it('should return if _getEventName returns null', (done) => {
       BaseMetricWorker.prototype._getEventName.returns(null)
       const worker = new BaseMetricWorker(job, meta)
-      expect(worker.task.bind(worker)).to.throw(WorkerStopError, 'Event name is required')
+      worker.task()
+      sinon.assert.notCalled(MetricTracker.track)
       done()
     })
 
