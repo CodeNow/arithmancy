@@ -22,13 +22,18 @@ const testPublisher = new RabbitConnector({
   port: process.env.RABBITMQ_PORT,
   username: process.env.RABBITMQ_USERNAME,
   password: process.env.RABBITMQ_PASSWORD,
-  events: ['container.life-cycle.started']
+  events: [
+    'container.life-cycle.started',
+    'container.network.attached',
+    'worker.errored'
+  ]
 })
 
 describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
-      sinon.stub(ContainerLifeCycleStarted, 'task')
+      sinon.stub(ContainerLifeCycleStarted._Worker.prototype, 'task')
+      sinon.spy(ContainerLifeCycleStarted, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -36,6 +41,7 @@ describe('rabbitmq integration test', () => {
     })
 
     afterEach(() => {
+      ContainerLifeCycleStarted._Worker.prototype.task.restore()
       ContainerLifeCycleStarted.task.restore()
       return testPublisher.disconnect()
         .then(() => {
@@ -44,7 +50,7 @@ describe('rabbitmq integration test', () => {
     })
 
     it('should call worker', (done) => {
-      ContainerLifeCycleStarted.task.resolves()
+      ContainerLifeCycleStarted._Worker.prototype.task.resolves()
       const testJob = {
         host: 'http://10.0.0.1:4242',
         inspectData: {
@@ -52,7 +58,7 @@ describe('rabbitmq integration test', () => {
             Labels: {
               githubOrgId: 987654,
               instanceName: 'instanceName',
-              manualBuild: 'manualBuild',
+              manualBuild: true,
               sessionUserGithubId: 123345,
               type: 'type'
             }
@@ -61,11 +67,13 @@ describe('rabbitmq integration test', () => {
       }
       testPublisher.publishEvent('container.life-cycle.started', testJob)
       return Promise.try(function loop () {
-        if (ContainerLifeCycleStarted.task.callCount !== 1) {
+        if (ContainerLifeCycleStarted.task.callCount === 0) {
           return Promise.delay(500)
         }
       })
       .then(() => {
+        sinon.assert.calledOnce(ContainerLifeCycleStarted._Worker.prototype.task)
+        sinon.assert.calledWithExactly(ContainerLifeCycleStarted._Worker.prototype.task)
         sinon.assert.calledOnce(ContainerLifeCycleStarted.task)
         sinon.assert.calledWith(ContainerLifeCycleStarted.task, testJob)
       })

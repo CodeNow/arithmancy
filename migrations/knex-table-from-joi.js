@@ -13,7 +13,11 @@ module.exports = class KnexTableFromJoi {
       const sqlType = this._tableTypeFromJoi(joiItem)
       const nullType = this._getNullableType(joiItem)
 
-      this.knexTable[sqlType](columnName)[nullType]()
+      const column = this.knexTable[sqlType](columnName)[nullType]()
+      const defaultValue = joiItem.schema._flags.default
+      if (defaultValue) {
+        column.defaultTo(defaultValue)
+      }
     })
   }
 
