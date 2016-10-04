@@ -10,7 +10,7 @@
     "all-test": "npm run unit && npm run functional && npm run integration",
     "coverage": "NODE_PATH=./lib NODE_ENV=test lab -c -r html -o ./coverage/index.html",
     "create-db": "NODE_PATH=./lib node ./migrations/create-db.js",
-    "functional": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/functional",
+    "functional": "NODE_PATH=./lib NODE_ENV=test lab -m 5000 -l -v test/functional",
     "integration": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/integration",
     "lint": "standard --verbose",
     "migrate-down": "NODE_PATH=./lib NODE_ENV=test knex-migrate down",
