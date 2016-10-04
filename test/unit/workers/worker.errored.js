@@ -72,7 +72,7 @@ describe('worker.errored', () => {
     WorkerErrored.task(job, meta)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: process.env.APP_NAME,
+      appName: meta.appId,
       eventName: job.originalWorkerName,
       isWorkerSuccessfull: false,
       previousEventName: job.originalJobMeta.headers.publisherWorkerName,
@@ -92,7 +92,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(ContainerLifeCycleStarted.parseTags, containerStartedJob.originalJobPayload)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: process.env.APP_NAME,
+      appName: meta.appId,
       branchName: containerStartedJob.originalJobPayload.inspectData.Config.Labels.instanceName,
       dockerHostIp: '127.0.0.1',
       eventName: containerStartedJob.originalWorkerName,
@@ -128,7 +128,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(ContainerNetworkStarted.parseTags, containerNetworkAttached.originalJobPayload)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      appName: process.env.APP_NAME,
+      appName: meta.appId,
       containerId: containerNetworkAttached.originalJobPayload.id,
       eventName: containerNetworkAttached.originalWorkerName,
       githubOrgId: containerNetworkAttached.originalJobPayload.inspectData.Config.Labels.githubOrgId,

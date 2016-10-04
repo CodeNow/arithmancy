@@ -28,7 +28,7 @@ const expect = Code.expect
 const it = lab.it
 
 describe('container.life-cycle.started functional tests', () => {
-  const testPublisherName = 'test container.life-cycle.started'
+  const testPublisherName = 'publisher container.life-cycle.started'
   const testPublisher = new RabbitConnector({
     name: testPublisherName,
     log: logger.child({ module: 'test-publisher' }),
@@ -99,7 +99,7 @@ describe('container.life-cycle.started functional tests', () => {
       expect(eventData).to.include({
         id: 1,
         event_name: testEventName,
-        app_name: process.env.APP_NAME,
+        app_name: testPublisherName,
         branch_name: labels.instanceName,
         docker_host_ip: url.parse(UserContainerLifeCycleStartedEvent.host).hostname,
         github_org_id: parseInt(labels.githubOrgId, 10),
@@ -108,7 +108,7 @@ describe('container.life-cycle.started functional tests', () => {
 
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
-        appName: process.env.APP_NAME,
+        appName: testPublisherName,
         branchName: labels.instanceName,
         dockerHostIp: testHost,
         eventName: testEventName,
@@ -145,7 +145,7 @@ describe('container.life-cycle.started functional tests', () => {
       expect(eventData).to.include({
         id: 1,
         event_name: testEventName,
-        app_name: process.env.APP_NAME,
+        app_name: testPublisherName,
         docker_host_ip: url.parse(BuildContainerLifeCycleStartedEvent.host).hostname,
         github_org_id: parseInt(labels.githubOrgId, 10),
         github_user_id: parseInt(labels.sessionUserGithubId, 10)
@@ -153,7 +153,7 @@ describe('container.life-cycle.started functional tests', () => {
 
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
-        appName: process.env.APP_NAME,
+        appName: testPublisherName,
         dockerHostIp: testHost,
         eventName: testEventName,
         githubOrgId: testOrgId,

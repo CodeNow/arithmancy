@@ -85,7 +85,7 @@ describe('base.metric.worker', () => {
       worker.task().then(() => {
         sinon.assert.calledOnce(MetricTracker.track)
         sinon.assert.calledWithExactly(MetricTracker.track, {
-          appName: process.env.APP_NAME,
+          appName: meta.appId,
           eventName: 'container.started',
           githubOrgId: 1234,
           instanceId: 'inst-1',
