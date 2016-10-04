@@ -1,7 +1,7 @@
 'use strict'
+require('loadenv')()
 const Lab = require('lab')
 const Code = require('code')
-
 const MetricEvent = require('models/data-structures/metric-event')
 
 const lab = exports.lab = Lab.script()
@@ -52,6 +52,17 @@ describe('metric-event', () => {
     it('should get event data', (done) => {
       const out = metricEvent.getEventData()
       expect(out).to.equal(testData)
+      done()
+    })
+
+    it('should return only tags', (done) => {
+      const out = metricEvent.getTags()
+      expect(out).to.equal({
+        eventName: 'container.died',
+        appName: process.env.APP_NAME,
+        previousEventName: 'container.start',
+        githubOrgId: 123123
+      })
       done()
     })
   }) // end methods
