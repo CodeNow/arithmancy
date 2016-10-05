@@ -1,4 +1,5 @@
 'use strict'
+require('loadenv')()
 const Code = require('code')
 const Lab = require('lab')
 const Promise = require('bluebird')
@@ -69,6 +70,7 @@ describe('postgres integration test', () => {
               docker_host_ip: null,
               master_instance_id: null,
               instance_id: null,
+              context_version_id: null,
               container_id: null,
               is_manual_build: null,
               is_worker_successfull: true,
