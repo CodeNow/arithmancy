@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "all-test": "NODE_PATH=./lib NODE_ENV=test lab -c -v -l ./test",
+    "all-test": "NODE_PATH=./lib NODE_ENV=test lab -c -v -l --threshold 100 ./test",
     "coverage": "NODE_PATH=./lib NODE_ENV=test lab -c -r html -o ./coverage/index.html",
     "create-db": "NODE_PATH=./lib node ./migrations/create-db.js",
     "functional": "NODE_PATH=./lib NODE_ENV=test lab -m 5000 -l -v test/functional",
