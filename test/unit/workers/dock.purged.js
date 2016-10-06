@@ -2,7 +2,7 @@
 const Lab = require('lab')
 const Code = require('code')
 
-const DockRemoved = require('workers/dock.removed')
+const DockRemoved = require('workers/dock.purged')
 
 const lab = exports.lab = Lab.script()
 
@@ -10,16 +10,12 @@ const describe = lab.describe
 const it = lab.it
 const expect = Code.expect
 
-describe('dock.removed', () => {
+describe('dock.purged', () => {
   const testOrgId = 1738
   const testDockerIp = '10.0.0.2'
   const testJob = {
     githubOrgId: testOrgId,
-    host: `http://${testDockerIp}:4342`
-  }
-  const meta = {
-    appId: 'palantiri',
-    timestamp: Date.now()
+    ipAddress: testDockerIp
   }
 
   it('should parse tags correctly', (done) => {
@@ -37,16 +33,16 @@ describe('dock.removed', () => {
       githubOrgId: testOrgId,
       dockerHostIp: testDockerIp
     })
-    const worker = new DockRemoved._Worker(testJob, meta)
+    const worker = new DockRemoved._Worker(testJob)
     const parsedTags = worker._parseTags()
     expect(tags).to.equal(parsedTags)
     done()
   })
 
   it('should return correct eventName', (done) => {
-    const worker = new DockRemoved._Worker(testJob, meta)
+    const worker = new DockRemoved._Worker(testJob)
     const eventName = worker._getEventName()
-    expect(eventName).to.equal('dock.removed')
+    expect(eventName).to.equal('dock.purged')
     done()
   })
 })
