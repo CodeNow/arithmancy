@@ -1,6 +1,7 @@
 'use strict'
 const Lab = require('lab')
 const Code = require('code')
+const cls = require('continuation-local-storage')
 
 const BaseMetricWorker = require('workers/base.metric.worker')
 const MetricTracker = require('models/metric-tracker')
@@ -35,9 +36,10 @@ describe('base.metric.worker', () => {
       publisherWorkerName: 'container.create'
     }
   }
-  it('should throw because _getEventName is not implemented', (done) => {
+  it('should return false', (done) => {
     const worker = new BaseMetricWorker()
-    expect(worker._getEventName).to.throw(Error, /Should be implemented/)
+    const result = worker._shouldIgnore()
+    expect(result).to.be.false()
     done()
   })
 
@@ -55,22 +57,28 @@ describe('base.metric.worker', () => {
   })
 
   describe('task', () => {
+    let clsGetStub
     beforeEach((done) => {
-      sinon.stub(BaseMetricWorker.prototype, '_getEventName')
+      clsGetStub = sinon.stub()
+      sinon.stub(BaseMetricWorker.prototype, '_shouldIgnore')
       sinon.stub(BaseMetricWorker.prototype, '_parseTags')
+      sinon.stub(cls, 'getNamespace').returns({
+        get: clsGetStub
+      })
       sinon.stub(MetricTracker, 'track').resolves()
       done()
     })
 
     afterEach((done) => {
-      BaseMetricWorker.prototype._getEventName.restore()
+      BaseMetricWorker.prototype._shouldIgnore.restore()
       BaseMetricWorker.prototype._parseTags.restore()
+      cls.getNamespace.restore()
       MetricTracker.track.restore()
       done()
     })
 
-    it('should return if _getEventName returns null', (done) => {
-      BaseMetricWorker.prototype._getEventName.returns(null)
+    it('should return if _shouldIgnore returns true', (done) => {
+      BaseMetricWorker.prototype._shouldIgnore.returns(true)
       const worker = new BaseMetricWorker(job, meta)
       worker.task()
       sinon.assert.notCalled(MetricTracker.track)
@@ -78,7 +86,8 @@ describe('base.metric.worker', () => {
     })
 
     it('should call MetricTracker.track', (done) => {
-      BaseMetricWorker.prototype._getEventName.returns('container.started')
+      clsGetStub.returns('container.started')
+      BaseMetricWorker.prototype._shouldIgnore.returns(false)
       BaseMetricWorker.prototype._parseTags.returns({
         instanceId: 'inst-1',
         githubOrgId: 1234
@@ -96,23 +105,26 @@ describe('base.metric.worker', () => {
           timeRecevied: sinon.match.date,
           transactionId: job.tid
         })
+        sinon.assert.calledOnce(cls.getNamespace)
+        sinon.assert.calledWith(cls.getNamespace, 'ponos')
         done()
       }).catch(done)
     })
 
-    it('should call all funcstions in order', (done) => {
-      BaseMetricWorker.prototype._getEventName.returns('container.started')
+    it('should call all functions in order', (done) => {
+      clsGetStub.returns('container.started')
+      BaseMetricWorker.prototype._shouldIgnore.returns(false)
       BaseMetricWorker.prototype._parseTags.returns({
         instanceId: 'inst-1',
         githubOrgId: 1234
       })
       const worker = new BaseMetricWorker(job, meta)
       worker.task().then(() => {
-        sinon.assert.calledOnce(BaseMetricWorker.prototype._getEventName)
+        sinon.assert.calledOnce(BaseMetricWorker.prototype._shouldIgnore)
         sinon.assert.calledOnce(BaseMetricWorker.prototype._parseTags)
         sinon.assert.calledOnce(MetricTracker.track)
         sinon.assert.callOrder(
-          BaseMetricWorker.prototype._getEventName,
+          BaseMetricWorker.prototype._shouldIgnore,
           BaseMetricWorker.prototype._parseTags,
           MetricTracker.track
         )

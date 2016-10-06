@@ -38,11 +38,4 @@ describe('dock.purged', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new DockRemoved._Worker(testJob)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('dock.purged')
-    done()
-  })
 })

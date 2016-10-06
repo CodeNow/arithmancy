@@ -49,11 +49,4 @@ describe('container.network.attached', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new ContainerNetworkAttached._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('container.network.attached')
-    done()
-  })
 })

@@ -48,13 +48,5 @@ describe('container.life-cycle', () => {
         done()
       })
     }) // end _parseTags
-
-    describe('_getEventName', () => {
-      it('should call getEventName', (done) => {
-        const result = worker._getEventName()
-        expect(result).to.equal('user.whitelisted')
-        done()
-      })
-    }) // end _getEventName
   }) // end instance methods
 })

@@ -47,11 +47,4 @@ describe('organization.created', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new OrganizationCreated._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('organization.created')
-    done()
-  })
 })

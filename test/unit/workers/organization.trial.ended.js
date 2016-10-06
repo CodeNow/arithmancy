@@ -39,11 +39,4 @@ describe('organization.trial.ended', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new OrganizationTrialEnded._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('organization.trial.ended')
-    done()
-  })
 })

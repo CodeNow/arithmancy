@@ -50,11 +50,4 @@ describe('organization.user.removed', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new OrganizationUserRemoved._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('organization.user.removed')
-    done()
-  })
 })

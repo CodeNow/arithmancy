@@ -39,11 +39,4 @@ describe('organization.integration.prbot.enabled', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new PrBotEnabled._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('organization.integration.prbot.enabled')
-    done()
-  })
 })

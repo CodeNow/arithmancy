@@ -44,11 +44,4 @@ describe('organization.invoice.payment-failed', () => {
     expect(tags).to.equal(parsedTags)
     done()
   })
-
-  it('should return correct eventName', (done) => {
-    const worker = new OrganizationPaymentFailed._Worker(job, meta)
-    const eventName = worker._getEventName()
-    expect(eventName).to.equal('organization.invoice.payment-failed')
-    done()
-  })
 })

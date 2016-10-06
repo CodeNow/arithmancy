@@ -49,11 +49,5 @@ describe('first.dock.created', () => {
       })
       done()
     })
-
-    it('should return correct eventName', (done) => {
-      const eventName = worker._getEventName()
-      expect(eventName).to.equal('first.dock.created')
-      done()
-    })
   }) // end instance methods
 })

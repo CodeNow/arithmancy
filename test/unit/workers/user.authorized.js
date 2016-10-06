@@ -47,11 +47,5 @@ describe('user.authorized', () => {
       })
       done()
     })
-
-    it('should return correct eventName', (done) => {
-      const eventName = worker._getEventName()
-      expect(eventName).to.equal('user.authorized')
-      done()
-    })
   }) // end instance methods
 })

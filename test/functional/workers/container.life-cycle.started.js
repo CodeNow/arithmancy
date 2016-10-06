@@ -72,7 +72,7 @@ describe('container.life-cycle.started functional tests', () => {
   })
 
   it('should handle user container.life-cycle.started', () => {
-    const testEventName = 'instance.container.started'
+    const testEventName = 'container.life-cycle.started'
 
     testPublisher.publishEvent('container.life-cycle.started', UserContainerLifeCycleStartedEvent)
 
@@ -80,7 +80,7 @@ describe('container.life-cycle.started functional tests', () => {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
           if (eventDataTable.length !== 1) {
-            return Promise.delay(500).then(loop)
+            return Promise.delay(100).then(loop)
           }
           return eventDataTable
         })
@@ -118,7 +118,7 @@ describe('container.life-cycle.started functional tests', () => {
   })
 
   it('should handle build container.life-cycle.started', () => {
-    const testEventName = 'container.image-builder.started'
+    const testEventName = 'container.life-cycle.started'
 
     testPublisher.publishEvent('container.life-cycle.started', BuildContainerLifeCycleStartedEvent)
 
@@ -126,7 +126,7 @@ describe('container.life-cycle.started functional tests', () => {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
           if (eventDataTable.length !== 1) {
-            return Promise.delay(500).then(loop)
+            return Promise.delay(100).then(loop)
           }
           return eventDataTable
         })

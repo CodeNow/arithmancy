@@ -1,6 +1,6 @@
 'use strict'
 require('loadenv')()
-const cls = require('continuation-local-storage').createNamespace('ponos')
+const cls = require('continuation-local-storage')
 const Code = require('code')
 const Lab = require('lab')
 
@@ -25,8 +25,9 @@ describe('logger unit test', () => {
     const serializers = logger.serializers
     it('should use ponos namespace', (done) => {
       const testId = 'blue is good'
-      cls.run(() => {
-        cls.set('tid', testId)
+      const testCls = cls.createNamespace('ponos')
+      testCls.run(() => {
+        testCls.set('tid', testId)
         const out = serializers.tx()
         expect(out.tid).to.equal(testId)
         done()

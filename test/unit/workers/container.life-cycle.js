@@ -1,4 +1,6 @@
 'use strict'
+const expect = require('code').expect
+const keypather = require('keypather')()
 const Lab = require('lab')
 const sinon = require('sinon')
 
@@ -14,9 +16,14 @@ const describe = lab.describe
 const it = lab.it
 
 describe('container.life-cycle', () => {
-  const testJob = {
-    Cave: 'Inimicum'
-  }
+  let testJob
+
+  beforeEach((done) => {
+    testJob = {
+      Cave: 'Inimicum'
+    }
+    done()
+  })
 
   describe('static methods', () => {
     beforeEach((done) => {
@@ -41,13 +48,11 @@ describe('container.life-cycle', () => {
     let worker
     beforeEach((done) => {
       worker = new Worker._Worker(testJob)
-      sinon.stub(jobParser, 'getEventName')
       sinon.stub(jobParser, 'parseContainerLifeCycleJob')
       done()
     })
 
     afterEach((done) => {
-      jobParser.getEventName.restore()
       jobParser.parseContainerLifeCycleJob.restore()
       done()
     })
@@ -61,13 +66,33 @@ describe('container.life-cycle', () => {
       })
     }) // end _parseTags
 
-    describe('_getEventName', () => {
-      it('should call getEventName', (done) => {
-        worker._getEventName()
-        sinon.assert.calledOnce(jobParser.getEventName)
-        sinon.assert.calledWith(jobParser.getEventName, testJob)
+    describe('_shouldIgnore', () => {
+      it('should return false', (done) => {
+        keypather.set(testJob, 'inspectData.Config.Labels.type', 'image-builder-container')
+        const result = worker._shouldIgnore()
+        expect(result).to.be.false()
         done()
       })
-    }) // end _getEventName
+
+      it('should return false', (done) => {
+        keypather.set(testJob, 'inspectData.Config.Labels.type', 'user-container')
+        const result = worker._shouldIgnore()
+        expect(result).to.be.false()
+        done()
+      })
+
+      it('should return true', (done) => {
+        keypather.set(testJob, 'inspectData.Config.Labels.type', 'random')
+        const result = worker._shouldIgnore()
+        expect(result).to.be.true()
+        done()
+      })
+
+      it('should return true if type path does not exist', (done) => {
+        const result = worker._shouldIgnore()
+        expect(result).to.be.true()
+        done()
+      })
+    }) // end _shouldIgnore
   }) // end instance methods
 })
