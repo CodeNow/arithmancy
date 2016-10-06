@@ -17,6 +17,8 @@ const it = lab.it
 describe('worker.errored', () => {
   const job = {
     originalJobPayload: {
+      id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
+      needsInspect: true,
       host: 'http://127.0.0.1:4242',
       inspectData: {
         Config: {
@@ -94,6 +96,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(MetricTracker.track, {
       appName: meta.appId,
       branchName: containerStartedJob.originalJobPayload.inspectData.Config.Labels.instanceName,
+      containerId: containerStartedJob.id,
       dockerHostIp: '127.0.0.1',
       eventName: containerStartedJob.originalWorkerName,
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,

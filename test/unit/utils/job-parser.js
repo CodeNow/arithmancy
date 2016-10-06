@@ -206,6 +206,7 @@ describe('job-parser unit test', () => {
       }
       const result = jobParser.parseContainerLifeCycleJob(testJob)
       expect(result).to.equal({
+        containerId: testJob.id,
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId
       })
