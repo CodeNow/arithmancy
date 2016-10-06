@@ -164,13 +164,15 @@ describe('job-parser unit test', () => {
   }) // end _isManualBuild
 
   describe('parseContainerLifeCycleJob', () => {
-    it('should return formatted data', (done) => {
+    it('should return formatted data if needsInspect=true', (done) => {
       const testBranchName = 'Avis'
       const testGithubOrgId = 12674
       const testGithubUserId = 1736
       const testDockerHostIp = '10.0.0.2'
       const testJob = {
+        id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
         host: `http://${testDockerHostIp}:4242`,
+        needsInspect: true,
         inspectData: {
           Config: {
             Labels: {
@@ -185,10 +187,28 @@ describe('job-parser unit test', () => {
       const result = jobParser.parseContainerLifeCycleJob(testJob)
       expect(result).to.equal({
         branchName: testBranchName,
+        containerId: testJob.id,
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId,
         githubUserId: testGithubUserId,
         isManualBuild: true
+      })
+      done()
+    })
+    it('should return formatted data if needsInspect=false', (done) => {
+      const testGithubOrgId = 12674
+      const testDockerHostIp = '10.0.0.2'
+      const testJob = {
+        id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
+        host: `http://${testDockerHostIp}:4242`,
+        needsInspect: false,
+        org: testGithubOrgId
+      }
+      const result = jobParser.parseContainerLifeCycleJob(testJob)
+      expect(result).to.equal({
+        containerId: testJob.id,
+        dockerHostIp: testDockerHostIp,
+        githubOrgId: testGithubOrgId
       })
       done()
     })
