@@ -96,7 +96,7 @@ describe('worker.errored', () => {
     sinon.assert.calledWithExactly(MetricTracker.track, {
       appName: meta.appId,
       branchName: containerStartedJob.originalJobPayload.inspectData.Config.Labels.instanceName,
-      containerId: containerStartedJob.id,
+      containerId: containerStartedJob.originalJobPayload.id,
       dockerHostIp: '127.0.0.1',
       eventName: containerStartedJob.originalWorkerName,
       githubOrgId: containerStartedJob.originalJobPayload.inspectData.Config.Labels.githubOrgId,

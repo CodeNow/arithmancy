@@ -105,6 +105,7 @@ describe('container.life-cycle.started functional tests', () => {
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
         appName: testPublisherName,
+        containerId: UserContainerLifeCycleStartedEvent.id,
         branchName: labels.instanceName,
         dockerHostIp: testHost,
         eventName: testEventName,
@@ -151,6 +152,7 @@ describe('container.life-cycle.started functional tests', () => {
       sinon.assert.called(monitor.increment)
       sinon.assert.calledWith(monitor.increment, testEventName, {
         appName: testPublisherName,
+        containerId: BuildContainerLifeCycleStartedEvent.id,
         dockerHostIp: testHost,
         eventName: testEventName,
         githubOrgId: testOrgId,
