@@ -1,8 +1,11 @@
 'use strict'
 require('loadenv')()
-const Lab = require('lab')
+const clone = require('101/clone')
 const Code = require('code')
+const Lab = require('lab')
+
 const MetricEvent = require('models/data-structures/metric-event')
+const InvalidMetricEvent = require('errors/invalid-metric-event')
 
 const lab = exports.lab = Lab.script()
 
@@ -12,15 +15,21 @@ const expect = Code.expect
 const it = lab.it
 
 describe('metric-event', () => {
-  const testData = {
-    eventName: 'container.died',
-    timePublished: new Date(),
-    timeRecevied: new Date(),
-    transactionId: '123123123123',
-    appName: process.env.APP_NAME,
-    previousEventName: 'container.start',
-    githubOrgId: 123123
-  }
+  let testData
+
+  beforeEach((done) => {
+    testData = {
+      eventName: 'container.died',
+      timePublished: new Date(),
+      timeRecevied: new Date(),
+      transactionId: '123123123123',
+      appName: process.env.APP_NAME,
+      previousEventName: 'container.start',
+      githubOrgId: 123123,
+      isWorkerSuccessfull: true
+    }
+    done()
+  })
 
   describe('constructor', () => {
     it('should throw is missing data', (done) => {
@@ -29,7 +38,7 @@ describe('metric-event', () => {
           /* eslint-disable no-new */
           new MetricEvent(testInput)
           /* eslint-disable no-new */
-        }).to.throw(Error, /Invalid MetricEvent/)
+        }).to.throw(InvalidMetricEvent)
       })
 
       done()
@@ -55,13 +64,23 @@ describe('metric-event', () => {
       done()
     })
 
+    it('should get convert bad data', (done) => {
+      const originalData = clone(testData)
+      testData.githubOrgId = `${testData.githubOrgId}`
+      const convertedEvent = new MetricEvent(testData)
+      const out = convertedEvent.getEventData()
+      expect(out).to.equal(originalData)
+      done()
+    })
+
     it('should return only tags', (done) => {
       const out = metricEvent.getTags()
       expect(out).to.equal({
         eventName: 'container.died',
         appName: process.env.APP_NAME,
         previousEventName: 'container.start',
-        githubOrgId: 123123
+        githubOrgId: 123123,
+        isWorkerSuccessfull: true
       })
       done()
     })

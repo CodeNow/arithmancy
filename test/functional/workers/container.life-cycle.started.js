@@ -111,6 +111,7 @@ describe('container.life-cycle.started functional tests', () => {
         githubOrgId: testOrgId,
         githubUserId: testUserId,
         isManualBuild: undefined,
+        isWorkerSuccessfull: true,
         previousEventName: undefined
       })
     })
@@ -154,6 +155,7 @@ describe('container.life-cycle.started functional tests', () => {
         eventName: testEventName,
         githubOrgId: testOrgId,
         githubUserId: testUserId,
+        isWorkerSuccessfull: true,
         isManualBuild: true,
         previousEventName: undefined,
         branchName: undefined
