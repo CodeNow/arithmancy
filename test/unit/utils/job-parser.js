@@ -6,6 +6,7 @@ const Promise = require('bluebird')
 const sinon = require('sinon')
 
 const jobParser = require('utils/job-parser')
+const JobParseError = require('errors/job-parse-error')
 
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
@@ -17,6 +18,530 @@ const expect = Code.expect
 const it = lab.it
 
 describe('job-parser unit test', () => {
+  describe('parseWorkerJob', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'containerLifeCycleStarted')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.containerLifeCycleStarted.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.parseWorkerJob('container.life-cycle.started', testJob)
+      sinon.assert.calledOnce(jobParser.containerLifeCycleStarted)
+      sinon.assert.calledWith(jobParser.containerLifeCycleStarted, testJob)
+      done()
+    })
+
+    it('should throw JobParseError if parsing failed', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleStarted.throws(new Error('Geminio'))
+
+      expect(() => {
+        jobParser.parseWorkerJob('container.life-cycle.started', testJob)
+      }).to.throw(JobParseError)
+      done()
+    })
+  }) // end parseWorkerJob
+
+  describe('containerLifeCycleStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleStarted(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleStarted
+
+  describe('containerLifeCycleDied', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleDied(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleDied
+
+  describe('containerLifeCycleCreated', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleCreated(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleCreated
+
+  describe('dockLost', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'dockEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.dockEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.dockLost(testJob)
+      sinon.assert.calledOnce(jobParser.dockEvent)
+      sinon.assert.calledWith(jobParser.dockEvent, testJob)
+      done()
+    })
+  }) // end dockLost
+
+  describe('dockRemoved', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'dockEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.dockEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.dockRemoved(testJob)
+      sinon.assert.calledOnce(jobParser.dockEvent)
+      sinon.assert.calledWith(jobParser.dockEvent, testJob)
+      done()
+    })
+  }) // end dockRemoved
+
+  describe('instanceCreated', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'getInstanceTags')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.getInstanceTags.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { instance: { Salvio: 'Hexia' } }
+      jobParser.instanceCreated(testJob)
+      sinon.assert.calledOnce(jobParser.getInstanceTags)
+      sinon.assert.calledWith(jobParser.getInstanceTags, testJob.instance)
+      done()
+    })
+  }) // end instanceCreated
+
+  describe('instanceDeleted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'getInstanceTags')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.getInstanceTags.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { instance: { Salvio: 'Hexia' } }
+      jobParser.instanceDeleted(testJob)
+      sinon.assert.calledOnce(jobParser.getInstanceTags)
+      sinon.assert.calledWith(jobParser.getInstanceTags, testJob.instance)
+      done()
+    })
+  }) // end instanceDeleted
+
+  describe('organizationPaymentMethodAdded', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationPaymentMethod')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationPaymentMethod.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationPaymentMethodAdded(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationPaymentMethod)
+      sinon.assert.calledWith(jobParser.parseOrganizationPaymentMethod, testJob)
+      done()
+    })
+  }) // end organizationPaymentMethodAdded
+
+  describe('organizationPaymentMethodRemoved', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationPaymentMethod')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationPaymentMethod.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationPaymentMethodRemoved(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationPaymentMethod)
+      sinon.assert.calledWith(jobParser.parseOrganizationPaymentMethod, testJob)
+      done()
+    })
+  }) // end organizationPaymentMethodRemoved
+
+  describe('organizationTrialEnded', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationTrialEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationTrialEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationTrialEnded(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationTrialEvent)
+      sinon.assert.calledWith(jobParser.parseOrganizationTrialEvent, testJob)
+      done()
+    })
+  }) // end organizationTrialEnded
+
+  describe('organizationTrialEnding', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationTrialEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationTrialEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationTrialEnding(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationTrialEvent)
+      sinon.assert.calledWith(jobParser.parseOrganizationTrialEvent, testJob)
+      done()
+    })
+  }) // end organizationTrialEnding
+
+  describe('organizationUserAdded', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationUserChange')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationUserChange.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationUserAdded(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationUserChange)
+      sinon.assert.calledWith(jobParser.parseOrganizationUserChange, testJob)
+      done()
+    })
+  }) // end organizationUserAdded
+
+  describe('organizationUserRemoved', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseOrganizationUserChange')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseOrganizationUserChange.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.organizationUserRemoved(testJob)
+      sinon.assert.calledOnce(jobParser.parseOrganizationUserChange)
+      sinon.assert.calledWith(jobParser.parseOrganizationUserChange, testJob)
+      done()
+    })
+  }) // end organizationUserRemoved
+
+  describe('userWhitelisted', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        githubId: 1738
+      }
+
+      const tags = jobParser.userWhitelisted(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.githubId
+      })
+      done()
+    })
+  }) // end userWhitelisted
+
+  describe('userAuthorized', () => {
+    it('should parse tags correctly', (done) => {
+      const testGithubUserId = 1738
+      const testJob = {
+        githubId: testGithubUserId
+      }
+
+      const tags = jobParser.userAuthorized(testJob)
+
+      expect(tags).to.equal({
+        githubUserId: testGithubUserId
+      })
+      done()
+    })
+  }) // end userAuthorized
+
+  describe('organizationInvoicePaymentFailed', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        organization: {
+          id: 123
+        },
+        paymentMethodOwner: {
+          githubId: 999999
+        }
+      }
+
+      const tags = jobParser.organizationInvoicePaymentFailed(testJob)
+
+      expect(tags).to.equal({
+        bigPoppaOrgId: testJob.organization.id,
+        githubUserId: testJob.paymentMethodOwner.githubId
+      })
+      done()
+    })
+  }) // end organizationInvoicePaymentFailed
+
+  describe('organizationIntegrationPrbotEnabled', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        organization: {
+          id: 123
+        }
+      }
+
+      const tags = jobParser.organizationIntegrationPrbotEnabled(testJob)
+
+      expect(tags).to.equal({
+        bigPoppaOrgId: testJob.organization.id
+      })
+      done()
+    })
+  }) // end organizationIntegrationPrbotEnabled
+
+  describe('organizationCreated', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        organization: {
+          id: 123,
+          githubId: 88888
+        },
+        creator: {
+          githubId: 999999
+        }
+      }
+
+      const tags = jobParser.organizationCreated(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.organization.githubId,
+        bigPoppaOrgId: testJob.organization.id,
+        githubUserId: testJob.creator.githubId
+      })
+      done()
+    })
+  }) // end organizationCreated
+
+  describe('parseOrganizationUserChange', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        organization: {
+          id: 123,
+          githubId: 88888
+        },
+        user: {
+          id: 7777,
+          githubId: 999999
+        }
+      }
+
+      const tags = jobParser.parseOrganizationUserChange(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.organization.githubId,
+        bigPoppaOrgId: testJob.organization.id,
+        githubUserId: testJob.user.githubId,
+        bigPoppaUserId: testJob.user.id
+      })
+      done()
+    })
+  }) // end parseOrganizationUserChange
+
+  describe('organizationAuthorized', () => {
+    it('should parse tags correctly', (done) => {
+      const testGithubOrgId = 1738
+      const testGithubUserId = 9999
+      const testJob = {
+        githubId: testGithubOrgId,
+        creator: {
+          githubId: testGithubUserId
+        }
+      }
+
+      const tags = jobParser.organizationAuthorized(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testGithubOrgId,
+        githubUserId: testGithubUserId
+      })
+      done()
+    })
+  }) // end organizationAuthorized
+
+  describe('firstDockCreated', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        githubId: 123,
+        dockerHostIp: '10.2.3.4'
+      }
+
+      const tags = jobParser.firstDockCreated(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.githubId,
+        dockerHostIp: testJob.dockerHostIp
+      })
+      done()
+    })
+  }) // end firstDockCreated
+
+  describe('dockEvent', () => {
+    it('should parse tags correctly', (done) => {
+      const testDockerIp = '12.45.6.1'
+      const testJob = {
+        githubOrgId: 123,
+        host: `http://${testDockerIp}:4242`
+      }
+
+      const tags = jobParser.dockEvent(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.githubOrgId,
+        dockerHostIp: testDockerIp
+      })
+      done()
+    })
+  }) // end dockEvent
+
+  describe('dockPurged', () => {
+    it('should parse tags correctly', (done) => {
+      const testOrgId = 1738
+      const testDockerIp = '10.0.0.2'
+      const testJob = {
+        githubOrgId: testOrgId,
+        ipAddress: testDockerIp
+      }
+
+      const tags = jobParser.dockPurged(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testOrgId,
+        dockerHostIp: testDockerIp
+      })
+      done()
+    })
+  }) // end dockPurged
+
+  describe('parseOrganizationTrialEvent', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        organization: {
+          id: 123142
+        }
+      }
+
+      const tags = jobParser.parseOrganizationTrialEvent(testJob)
+
+      expect(tags).to.equal({
+        bigPoppaOrgId: testJob.organization.id
+      })
+      done()
+    })
+  }) // end parseOrganizationTrialEvent
+
+  describe('containerNetworkAttached', () => {
+    it('should parse tags correctly', (done) => {
+      const testJob = {
+        id: 'container-id-1',
+        inspectData: {
+          Config: {
+            Labels: {
+              githubOrgId: 123123,
+              instanceId: 'some-instance-id'
+            }
+          }
+        }
+      }
+
+      const tags = jobParser.containerNetworkAttached(testJob)
+
+      expect(tags).to.equal({
+        githubOrgId: testJob.inspectData.Config.Labels.githubOrgId,
+        instanceId: testJob.inspectData.Config.Labels.instanceId,
+        containerId: testJob.id
+      })
+      done()
+    })
+  }) // end containerNetworkAttached
+
   describe('getAppCodeVersionTags', () => {
     const testRepo = 'Aguamenti'
     const testBranch = 'Alohomora'

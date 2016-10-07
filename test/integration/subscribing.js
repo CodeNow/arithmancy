@@ -5,7 +5,7 @@ const Promise = require('bluebird')
 const sinon = require('sinon')
 const RabbitConnector = require('ponos/lib/rabbitmq')
 
-const ContainerLifeCycle = require('workers/container.life-cycle')
+const baseMetricWorker = require('workers/base.metric.worker')
 const SubscribedEventList = require('external/subscribed-event-list')
 const workerServer = require('external/worker-server')
 
@@ -29,8 +29,7 @@ const testPublisher = new RabbitConnector({
 describe('rabbitmq integration test', () => {
   describe('check subscribing', () => {
     beforeEach(() => {
-      sinon.stub(ContainerLifeCycle._Worker.prototype, 'task')
-      sinon.spy(ContainerLifeCycle, 'task')
+      sinon.stub(baseMetricWorker.prototype, 'task')
       return testPublisher.connect()
         .then(() => {
           return workerServer.start()
@@ -38,8 +37,7 @@ describe('rabbitmq integration test', () => {
     })
 
     afterEach(() => {
-      ContainerLifeCycle._Worker.prototype.task.restore()
-      ContainerLifeCycle.task.restore()
+      baseMetricWorker.prototype.task.restore()
       return testPublisher.disconnect()
         .then(() => {
           return workerServer.stop()
@@ -47,7 +45,7 @@ describe('rabbitmq integration test', () => {
     })
 
     it('should call worker', (done) => {
-      ContainerLifeCycle._Worker.prototype.task.resolves()
+      baseMetricWorker.prototype.task.resolves()
       const testJob = {
         host: 'http://10.0.0.1:4242',
         inspectData: {
@@ -64,15 +62,13 @@ describe('rabbitmq integration test', () => {
       }
       testPublisher.publishEvent('container.life-cycle.started', testJob)
       return Promise.try(function loop () {
-        if (ContainerLifeCycle.task.callCount === 0) {
+        if (baseMetricWorker.prototype.task.callCount === 0) {
           return Promise.delay(100)
         }
       })
       .then(() => {
-        sinon.assert.calledOnce(ContainerLifeCycle._Worker.prototype.task)
-        sinon.assert.calledWithExactly(ContainerLifeCycle._Worker.prototype.task)
-        sinon.assert.calledOnce(ContainerLifeCycle.task)
-        sinon.assert.calledWith(ContainerLifeCycle.task, testJob)
+        sinon.assert.calledOnce(baseMetricWorker.prototype.task)
+        sinon.assert.calledWithExactly(baseMetricWorker.prototype.task)
       })
     })
   }) // end check subscribing

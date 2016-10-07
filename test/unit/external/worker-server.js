@@ -20,11 +20,6 @@ describe('worker-server unit test', () => {
       done()
     })
 
-    it('should have populated tasks', (done) => {
-      expect(workerServer._tasks).to.be.an.object()
-      done()
-    })
-
     it('should have populated events', (done) => {
       expect(workerServer._events).to.be.an.object()
       done()

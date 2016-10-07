@@ -165,14 +165,41 @@ describe('container.life-cycle.started functional tests', () => {
     })
   })
 
-  it('should handle invalid container.life-cycle.started', (done) => {
+  it('should handle random container.life-cycle.started', (done) => {
+    const testEventName = 'container.life-cycle.started'
     testPublisher.publishEvent('container.life-cycle.started', InvalidContainerLifeCycleStartedEvent)
 
-    return postgresStore._knex('events')
-      .then((eventDataTable) => {
-        expect(eventDataTable).to.have.length(0)
-
-        sinon.assert.neverCalledWith(monitor.increment, 'container.life-cycle.started')
+    return Promise.try(function loop () {
+      return postgresStore._knex('events')
+        .then((eventDataTable) => {
+          if (eventDataTable.length !== 1) {
+            return Promise.delay(100).then(loop)
+          }
+          return eventDataTable
+        })
+    })
+    .then((eventDataTable) => {
+      expect(eventDataTable).to.have.length(1)
+      const eventData = eventDataTable.pop()
+      const testHost = url.parse(InvalidContainerLifeCycleStartedEvent.host).hostname
+      const testOrgId = parseInt(InvalidContainerLifeCycleStartedEvent.org, 10)
+      expect(eventData).to.include({
+        id: 1,
+        event_name: testEventName,
+        app_name: testPublisherName,
+        docker_host_ip: url.parse(InvalidContainerLifeCycleStartedEvent.host).hostname
       })
+
+      sinon.assert.called(monitor.increment)
+      sinon.assert.calledWith(monitor.increment, testEventName, {
+        appName: testPublisherName,
+        containerId: InvalidContainerLifeCycleStartedEvent.id,
+        dockerHostIp: testHost,
+        eventName: testEventName,
+        isWorkerSuccessfull: true,
+        githubOrgId: testOrgId,
+        previousEventName: undefined
+      })
+    })
   })
 }) // end container.life-cycle.started functional tests
