@@ -33,19 +33,27 @@ describe('metric-event', () => {
 
   describe('constructor', () => {
     it('should throw is missing data', (done) => {
-      [null, undefined, [], {}].forEach((testInput) => {
-        expect(() => {
-          /* eslint-disable no-new */
-          new MetricEvent(testInput)
-          /* eslint-disable no-new */
-        }).to.throw(InvalidMetricEvent)
-      })
+      expect(() => {
+        /* eslint-disable no-new */
+        new MetricEvent({})
+        /* eslint-disable no-new */
+      }).to.throw(InvalidMetricEvent)
 
       done()
     })
 
     it('should saveMetricEvent all properties on event', (done) => {
       new MetricEvent(testData)
+      done()
+    })
+
+    it('should remove undefined and null keys', (done) => {
+      const testMetric = clone(testData)
+      testMetric.repoName = undefined
+      testMetric.branchName = null
+      const metric = new MetricEvent(testMetric)
+      expect(metric._event).to.not.include(['repoName', 'branchName'])
+      expect(metric._event).to.equal(testData)
       done()
     })
   }) // end constructor
