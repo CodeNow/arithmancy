@@ -108,6 +108,7 @@ describe('container.life-cycle.started functional tests', () => {
         containerId: UserContainerLifeCycleStartedEvent.id,
         branchName: labels.instanceName,
         dockerHostIp: testHost,
+        instanceId: labels.instanceId,
         eventName: testEventName,
         githubOrgId: testOrgId,
         githubUserId: testUserId,

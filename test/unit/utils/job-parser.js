@@ -519,13 +519,22 @@ describe('job-parser unit test', () => {
 
   describe('containerNetworkAttached', () => {
     it('should parse tags correctly', (done) => {
+      const testBranchName = 'Obscuro'
+      const testInstanceId = 'Obliviate'
+      const testGithubOrgId = 12674
+      const testGithubUserId = 1736
+      const testDockerHostIp = '10.0.0.2'
       const testJob = {
-        id: 'container-id-1',
+        id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
+        host: `http://${testDockerHostIp}:4242`,
+        needsInspect: true,
         inspectData: {
           Config: {
             Labels: {
-              githubOrgId: 123123,
-              instanceId: 'some-instance-id'
+              instanceName: testBranchName,
+              instanceId: testInstanceId,
+              githubOrgId: testGithubOrgId,
+              sessionUserGithubId: testGithubUserId
             }
           }
         }
@@ -534,9 +543,13 @@ describe('job-parser unit test', () => {
       const tags = jobParser.containerNetworkAttached(testJob)
 
       expect(tags).to.equal({
-        githubOrgId: testJob.inspectData.Config.Labels.githubOrgId,
-        instanceId: testJob.inspectData.Config.Labels.instanceId,
-        containerId: testJob.id
+        branchName: testBranchName,
+        instanceId: testInstanceId,
+        containerId: testJob.id,
+        dockerHostIp: testDockerHostIp,
+        githubOrgId: testGithubOrgId,
+        githubUserId: testGithubUserId,
+        isManualBuild: undefined
       })
       done()
     })
@@ -691,9 +704,11 @@ describe('job-parser unit test', () => {
   describe('parseContainerLifeCycleJob', () => {
     it('should return formatted data if needsInspect=true', (done) => {
       const testBranchName = 'Avis'
+      const testInstanceId = 'Morsmorde'
       const testGithubOrgId = 12674
       const testGithubUserId = 1736
       const testDockerHostIp = '10.0.0.2'
+
       const testJob = {
         id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
         host: `http://${testDockerHostIp}:4242`,
@@ -702,6 +717,7 @@ describe('job-parser unit test', () => {
           Config: {
             Labels: {
               instanceName: testBranchName,
+              instanceId: testInstanceId,
               githubOrgId: testGithubOrgId,
               sessionUserGithubId: testGithubUserId,
               manualBuild: 'true'
@@ -712,6 +728,7 @@ describe('job-parser unit test', () => {
       const result = jobParser.parseContainerLifeCycleJob(testJob)
       expect(result).to.equal({
         branchName: testBranchName,
+        instanceId: testInstanceId,
         containerId: testJob.id,
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId,
