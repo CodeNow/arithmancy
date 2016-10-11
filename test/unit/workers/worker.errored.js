@@ -108,7 +108,6 @@ describe('worker.errored', () => {
     sinon.assert.notCalled(jobParser.parseWorkerJob)
     sinon.assert.calledOnce(MetricTracker.track)
     sinon.assert.calledWithExactly(MetricTracker.track, {
-      Prior: testOrignialPayload.Prior,
       appName: meta.appId,
       eventName: containerStartedJob.originalWorkerName,
       isWorkerSuccessfull: false,
