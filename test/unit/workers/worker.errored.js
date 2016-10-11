@@ -95,7 +95,28 @@ describe('worker.errored', () => {
       timeRecevied: sinon.match.date,
       transactionId: containerStartedJob.tid
     })
+    done()
+  })
 
+  it('should not parse tags if parser not found', (done) => {
+    const containerStartedJob = Object.assign({}, job, {
+      originalWorkerName: 'fake-parser'
+    })
+    jobParser.parseWorkerJob.returns(testOrignialPayload)
+
+    WorkerErrored.task(containerStartedJob, meta)
+    sinon.assert.notCalled(jobParser.parseWorkerJob)
+    sinon.assert.calledOnce(MetricTracker.track)
+    sinon.assert.calledWithExactly(MetricTracker.track, {
+      Prior: testOrignialPayload.Prior,
+      appName: meta.appId,
+      eventName: containerStartedJob.originalWorkerName,
+      isWorkerSuccessfull: false,
+      previousEventName: containerStartedJob.originalJobMeta.headers.publisherWorkerName,
+      timePublished: new Date(meta.timestamp),
+      timeRecevied: sinon.match.date,
+      transactionId: containerStartedJob.tid
+    })
     done()
   })
 })
