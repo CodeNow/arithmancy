@@ -112,6 +112,7 @@ describe('container.life-cycle.started functional tests', () => {
         eventName: testEventName,
         githubOrgId: testOrgId,
         githubUserId: testUserId,
+        containerType: 'user-container',
         isWorkerSuccessfull: true
       })
     })
@@ -157,6 +158,7 @@ describe('container.life-cycle.started functional tests', () => {
         githubOrgId: testOrgId,
         githubUserId: testUserId,
         isWorkerSuccessfull: true,
+        containerType: 'image-builder-container',
         isManualBuild: true
       })
     })

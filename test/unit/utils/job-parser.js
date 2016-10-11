@@ -524,6 +524,7 @@ describe('job-parser unit test', () => {
       const testGithubOrgId = 12674
       const testGithubUserId = 1736
       const testDockerHostIp = '10.0.0.2'
+      const testContainerType = 'user-container'
       const testJob = {
         id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
         host: `http://${testDockerHostIp}:4242`,
@@ -534,6 +535,7 @@ describe('job-parser unit test', () => {
               instanceName: testBranchName,
               instanceId: testInstanceId,
               githubOrgId: testGithubOrgId,
+              type: testContainerType,
               sessionUserGithubId: testGithubUserId
             }
           }
@@ -549,6 +551,7 @@ describe('job-parser unit test', () => {
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId,
         githubUserId: testGithubUserId,
+        containerType: testContainerType,
         isManualBuild: undefined
       })
       done()
@@ -708,7 +711,7 @@ describe('job-parser unit test', () => {
       const testGithubOrgId = 12674
       const testGithubUserId = 1736
       const testDockerHostIp = '10.0.0.2'
-
+      const testContainerType = 'user-container'
       const testJob = {
         id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
         host: `http://${testDockerHostIp}:4242`,
@@ -720,6 +723,7 @@ describe('job-parser unit test', () => {
               instanceId: testInstanceId,
               githubOrgId: testGithubOrgId,
               sessionUserGithubId: testGithubUserId,
+              type: testContainerType,
               manualBuild: 'true'
             }
           }
@@ -733,6 +737,7 @@ describe('job-parser unit test', () => {
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId,
         githubUserId: testGithubUserId,
+        containerType: testContainerType,
         isManualBuild: true
       })
       done()
