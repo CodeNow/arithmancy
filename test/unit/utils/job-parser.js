@@ -188,6 +188,38 @@ describe('job-parser unit test', () => {
     })
   }) // end instanceDeleted
 
+  describe('instanceUpdated', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'getInstanceTags')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.getInstanceTags.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { instance: { Salvio: 'Hexia' } }
+      jobParser.instanceUpdated(testJob)
+      sinon.assert.calledOnce(jobParser.getInstanceTags)
+      sinon.assert.calledWith(jobParser.getInstanceTags, testJob.instance)
+      done()
+    })
+  }) // end instanceUpdated
+
+  describe('instanceDeployed', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { instanceId: 'inst-1', cvId: 'cv-``' }
+      const result = jobParser.instanceDeployed(testJob)
+      expect(result).to.equal({
+        instanceId: testJob.instanceId,
+        contextVersionId: testJob.cvId
+      })
+      done()
+    })
+  }) // end instanceUpdated
+
   describe('organizationPaymentMethodAdded', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'parseOrganizationPaymentMethod')
