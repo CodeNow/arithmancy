@@ -66,6 +66,7 @@ describe('postgres integration test', () => {
               previous_event_name: 'container.start',
               github_org_id: 123123,
               container_type: 'user-container',
+              stripe_customer_id: null,
               github_user_id: null,
               big_poppa_org_id: null,
               big_poppa_user_id: null,
