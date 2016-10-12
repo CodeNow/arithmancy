@@ -47,10 +47,11 @@ describe('metric-event', () => {
       done()
     })
 
-    it('should remove undefined and null keys', (done) => {
+    it('should remove invalid keys', (done) => {
       const testMetric = clone(testData)
       testMetric.repoName = undefined
       testMetric.branchName = null
+      testMetric.instanceId = NaN
       const metric = new MetricEvent(testMetric)
       expect(metric._event).to.not.include(['repoName', 'branchName'])
       expect(metric._event).to.equal(testData)
