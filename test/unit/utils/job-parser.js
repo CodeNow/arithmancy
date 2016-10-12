@@ -108,6 +108,46 @@ describe('job-parser unit test', () => {
     })
   }) // end containerLifeCycleCreated
 
+  describe('dockDiskFilled', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'dockEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.dockEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.dockDiskFilled(testJob)
+      sinon.assert.calledOnce(jobParser.dockEvent)
+      sinon.assert.calledWith(jobParser.dockEvent, testJob)
+      done()
+    })
+  }) // end dockDiskFilled
+
+  describe('dockMemoryExhausted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'dockEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.dockEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.dockMemoryExhausted(testJob)
+      sinon.assert.calledOnce(jobParser.dockEvent)
+      sinon.assert.calledWith(jobParser.dockEvent, testJob)
+      done()
+    })
+  }) // end dockDiskFilled
+
   describe('dockLost', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'dockEvent')
@@ -142,6 +182,26 @@ describe('job-parser unit test', () => {
     it('should call correct parser', (done) => {
       const testJob = { Salvio: 'Hexia' }
       jobParser.dockRemoved(testJob)
+      sinon.assert.calledOnce(jobParser.dockEvent)
+      sinon.assert.calledWith(jobParser.dockEvent, testJob)
+      done()
+    })
+  }) // end dockRemoved
+
+  describe('dockUnresponsive', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'dockEvent')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.dockEvent.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.dockUnresponsive(testJob)
       sinon.assert.calledOnce(jobParser.dockEvent)
       sinon.assert.calledWith(jobParser.dockEvent, testJob)
       done()
