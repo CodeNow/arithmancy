@@ -220,6 +220,39 @@ describe('job-parser unit test', () => {
     })
   }) // end instanceUpdated
 
+  describe('stripeInvoiceCreated', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { stripeCustomerId: 'cus1' }
+      const result = jobParser.stripeInvoiceCreated(testJob)
+      expect(result).to.equal({
+        stripeCustomerId: testJob.stripeCustomerId
+      })
+      done()
+    })
+  }) // end stripeInvoiceCreated
+
+  describe('stripeInvoicePaymentFailed', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { stripeCustomerId: 'cus1' }
+      const result = jobParser.stripeInvoicePaymentFailed(testJob)
+      expect(result).to.equal({
+        stripeCustomerId: testJob.stripeCustomerId
+      })
+      done()
+    })
+  }) // end stripeInvoicePaymentFailed
+
+  describe('stripeInvoicePaymentSucceeded', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { stripeCustomerId: 'cus1' }
+      const result = jobParser.stripeInvoicePaymentSucceeded(testJob)
+      expect(result).to.equal({
+        stripeCustomerId: testJob.stripeCustomerId
+      })
+      done()
+    })
+  }) // end stripeInvoicePaymentSucceeded
+
   describe('organizationPaymentMethodAdded', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'parseOrganizationPaymentMethod')
