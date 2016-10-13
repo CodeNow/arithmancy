@@ -278,7 +278,21 @@ describe('job-parser unit test', () => {
       })
       done()
     })
-  }) // end instanceUpdated
+  }) // end instanceDeployed
+
+  describe('instanceStarted', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { fake: true, instanceId: 'inst-1', githubOrgId: 1111, githubUserId: 2222, bigPoppaUserId: 3333 }
+      const result = jobParser.instanceStarted(testJob)
+      expect(result).to.equal({
+        instanceId: testJob.instanceId,
+        githubOrgId: testJob.githubOrgId,
+        githubUserId: testJob.githubUserId,
+        bigPoppaUserId: testJob.bigPoppaUserId
+      })
+      done()
+    })
+  }) // end instanceStarted
 
   describe('stripeInvoiceCreated', () => {
     it('should call correct parser', (done) => {
