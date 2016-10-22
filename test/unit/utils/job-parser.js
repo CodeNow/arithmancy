@@ -281,13 +281,20 @@ describe('job-parser unit test', () => {
   }) // end instanceDeployed
 
   describe('instanceStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'getInstanceTags')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.getInstanceTags.restore()
+      done()
+    })
     it('should call correct parser', (done) => {
-      const testJob = { instanceId: 'inst-1', cvId: 'cv-``' }
-      const result = jobParser.instanceStarted(testJob)
-      expect(result).to.equal({
-        instanceId: testJob.instanceId,
-        contextVersionId: testJob.cvId
-      })
+      const testJob = { instance: { Salvio: 'Hexia' } }
+      jobParser.instanceStarted(testJob)
+      sinon.assert.calledOnce(jobParser.getInstanceTags)
+      sinon.assert.calledWith(jobParser.getInstanceTags, testJob.instance)
       done()
     })
   }) // end instanceStarted
