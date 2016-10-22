@@ -278,7 +278,26 @@ describe('job-parser unit test', () => {
       })
       done()
     })
-  }) // end instanceUpdated
+  }) // end instanceDeployed
+
+  describe('instanceStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'getInstanceTags')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.getInstanceTags.restore()
+      done()
+    })
+    it('should call correct parser', (done) => {
+      const testJob = { instance: { Salvio: 'Hexia' } }
+      jobParser.instanceStarted(testJob)
+      sinon.assert.calledOnce(jobParser.getInstanceTags)
+      sinon.assert.calledWith(jobParser.getInstanceTags, testJob.instance)
+      done()
+    })
+  }) // end instanceStarted
 
   describe('stripeInvoiceCreated', () => {
     it('should call correct parser', (done) => {
