@@ -56,6 +56,7 @@ describe('rabbitmq integration test', () => {
               instanceName: 'instanceName',
               manualBuild: 'true',
               sessionUserGithubId: 123345,
+              instanceId: '57f1694ae5b1b11100d93c49',
               type: 'user-container'
             }
           }
