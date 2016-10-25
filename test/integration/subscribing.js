@@ -47,6 +47,7 @@ describe('rabbitmq integration test', () => {
     it('should call worker', (done) => {
       baseMetricWorker.prototype.task.resolves()
       const testJob = {
+        id: 'e0a640ed40f4e80c3976bd272d428b7ca0282d827937cf4a2a7471c1afd70741',
         host: 'http://10.0.0.1:4242',
         inspectData: {
           Config: {
