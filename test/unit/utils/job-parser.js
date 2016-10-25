@@ -128,6 +128,18 @@ describe('job-parser unit test', () => {
     })
   }) // end dockDiskFilled
 
+describe('dockInitialized', () => {
+  it('should call correct parser', (done) => {
+    const testJob = { githubOrgId: 2828361, instanceId: 'i-99999999' }
+    const tags = jobParser.dockInitialized(testJob)
+    expect(tags).to.equal({
+      githubOrgId: testJob.githubOrgId,
+      instanceId: testJob.instanceId
+    })
+    done()
+  })
+}) // end dockInitialized
+
   describe('dockMemoryExhausted', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'dockEvent')
