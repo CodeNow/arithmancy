@@ -48,7 +48,7 @@ describe('job-parser unit test', () => {
     })
   }) // end parseWorkerJob
 
-  describe('containerLifeCycleStarted', () => {
+  describe('applicationContainerCreated', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'parseContainerLifeCycleJob')
       done()
@@ -61,14 +61,54 @@ describe('job-parser unit test', () => {
 
     it('should call correct parser', (done) => {
       const testJob = { Salvio: 'Hexia' }
-      jobParser.containerLifeCycleStarted(testJob)
+      jobParser.applicationContainerCreated(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end applicationContainerCreated
+
+  describe('applicationContainerDied', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.applicationContainerDied(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end applicationContainerDied
+
+  describe('applicationContainerStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.applicationContainerStarted(testJob)
       sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
       sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
       done()
     })
   }) // end containerLifeCycleStarted
 
-  describe('containerLifeCycleDied', () => {
+  describe('buildContainerCreated', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'parseContainerLifeCycleJob')
       done()
@@ -81,12 +121,52 @@ describe('job-parser unit test', () => {
 
     it('should call correct parser', (done) => {
       const testJob = { Salvio: 'Hexia' }
-      jobParser.containerLifeCycleDied(testJob)
+      jobParser.buildContainerCreated(testJob)
       sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
       sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
       done()
     })
-  }) // end containerLifeCycleDied
+  }) // end buildContainerCreated
+
+  describe('buildContainerDied', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.buildContainerDied(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end buildContainerDied
+
+  describe('buildContainerStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.buildContainerStarted(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleStarted
 
   describe('containerLifeCycleCreated', () => {
     beforeEach((done) => {
@@ -108,6 +188,46 @@ describe('job-parser unit test', () => {
     })
   }) // end containerLifeCycleCreated
 
+  describe('containerLifeCycleDied', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleDied(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleDied
+
+  describe('containerLifeCycleStarted', () => {
+    beforeEach((done) => {
+      sinon.stub(jobParser, 'parseContainerLifeCycleJob')
+      done()
+    })
+
+    afterEach((done) => {
+      jobParser.parseContainerLifeCycleJob.restore()
+      done()
+    })
+
+    it('should call correct parser', (done) => {
+      const testJob = { Salvio: 'Hexia' }
+      jobParser.containerLifeCycleStarted(testJob)
+      sinon.assert.calledOnce(jobParser.parseContainerLifeCycleJob)
+      sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
+      done()
+    })
+  }) // end containerLifeCycleStarted
+
   describe('dockDiskFilled', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'dockEvent')
@@ -128,17 +248,17 @@ describe('job-parser unit test', () => {
     })
   }) // end dockDiskFilled
 
-describe('dockInitialized', () => {
-  it('should call correct parser', (done) => {
-    const testJob = { githubOrgId: 2828361, instanceId: 'i-99999999' }
-    const tags = jobParser.dockInitialized(testJob)
-    expect(tags).to.equal({
-      githubOrgId: testJob.githubOrgId,
-      instanceId: testJob.instanceId
+  describe('dockInitialized', () => {
+    it('should call correct parser', (done) => {
+      const testJob = { githubOrgId: 2828361, instanceId: 'i-99999999' }
+      const tags = jobParser.dockInitialized(testJob)
+      expect(tags).to.equal({
+        githubOrgId: testJob.githubOrgId,
+        instanceId: testJob.instanceId
+      })
+      done()
     })
-    done()
-  })
-}) // end dockInitialized
+  }) // end dockInitialized
 
   describe('dockMemoryExhausted', () => {
     beforeEach((done) => {
