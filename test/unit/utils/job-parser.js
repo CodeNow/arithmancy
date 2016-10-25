@@ -128,6 +128,26 @@ describe('job-parser unit test', () => {
     })
   }) // end dockDiskFilled
 
+describe('dockInitialized', () => {
+  beforeEach((done) => {
+  sinon.stub(jobParser, 'parseDockInitialized')
+  done()
+})
+
+afterEach((done) => {
+  jobParser.parseDockInitialized.restore()
+done()
+})
+
+it('should call correct parser', (done) => {
+  const testJob = { githubOrgId: 2828361, instanceId: 'i-99999999' }
+  jobParser.dockInitialized(testJob)
+sinon.assert.calledOnce(jobParser.parseDockInitialized)
+sinon.assert.calledWith(jobParser.parseDockInitialized, testJob)
+done()
+})
+}) // end dockInitialized
+
   describe('dockMemoryExhausted', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'dockEvent')
@@ -624,6 +644,23 @@ describe('job-parser unit test', () => {
       done()
     })
   }) // end dockEvent
+
+describe('parseDockInitialized', () => {
+  it('should parse tags correctly', (done) => {
+  const testJob = {
+    githubOrgId: 2828361,
+    instanceId: 'i-99999999'
+  }
+
+  const tags = jobParser.parseDockInitialized(testJob)
+
+  expect(tags).to.equal({
+    githubOrgId: testJob.githubOrgId,
+    instanceId: testJob.instanceId
+  })
+  done()
+})
+}) // end parseDockInitialized
 
   describe('dockPurged', () => {
     it('should parse tags correctly', (done) => {
