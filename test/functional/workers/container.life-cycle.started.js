@@ -120,8 +120,7 @@ describe('container.life-cycle.started functional tests', () => {
 
   it('should handle build container.life-cycle.started', () => {
     const testEventName = 'container.life-cycle.started'
-
-    testPublisher.publishEvent('container.life-cycle.started', BuildContainerLifeCycleStartedEvent)
+    testPublisher.publishEvent(testEventName, BuildContainerLifeCycleStartedEvent)
 
     return Promise.try(function loop () {
       return postgresStore._knex('events')
