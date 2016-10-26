@@ -338,6 +338,33 @@ describe('job-parser unit test', () => {
       sinon.assert.calledWith(jobParser.dockEvent, testJob)
       done()
     })
+  }) // end dockUnresponsive
+
+  describe('githubPushed', () => {
+    it('should call correct parser', (done) => {
+      const testJob = {
+        payload: {
+          repository: {
+            name: 'Runnable/helloode',
+            owner: {
+              id: 12345
+            }
+          },
+          sender: {
+            id: 6789
+          },
+          ref: 'refs/heads/feature-1'
+        }
+      }
+      const parsed = jobParser.githubPushed(testJob)
+      expect(parsed).to.equal({
+        githubOrgId: 12345,
+        githubUserId: 6789,
+        repoName: 'Runnable/helloode',
+        branchName: 'feature-1'
+      })
+      done()
+    })
   }) // end dockRemoved
 
   describe('instanceCreated', () => {
