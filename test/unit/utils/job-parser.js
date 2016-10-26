@@ -106,7 +106,7 @@ describe('job-parser unit test', () => {
       sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
       done()
     })
-  }) // end containerLifeCycleStarted
+  }) // end applicationContainerStarted
 
   describe('buildContainerCreated', () => {
     beforeEach((done) => {
@@ -166,7 +166,7 @@ describe('job-parser unit test', () => {
       sinon.assert.calledWith(jobParser.parseContainerLifeCycleJob, testJob)
       done()
     })
-  }) // end containerLifeCycleStarted
+  }) // end buildContainerStarted
 
   describe('containerLifeCycleCreated', () => {
     beforeEach((done) => {
