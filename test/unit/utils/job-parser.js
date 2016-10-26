@@ -341,7 +341,7 @@ describe('job-parser unit test', () => {
   }) // end dockUnresponsive
 
   describe('githubPushed', () => {
-    it('should call correct parser', (done) => {
+    it('should parse data', (done) => {
       const testJob = {
         payload: {
           repository: {
@@ -365,7 +365,33 @@ describe('job-parser unit test', () => {
       })
       done()
     })
-  }) // end dockRemoved
+
+    it('should parse org id if org provided', (done) => {
+      const testJob = {
+        payload: {
+          repository: {
+            name: 'Runnable/helloode',
+            owner: {}
+          },
+          organization: {
+            id: 12345
+          },
+          sender: {
+            id: 6789
+          },
+          ref: 'refs/heads/feature-1'
+        }
+      }
+      const parsed = jobParser.githubPushed(testJob)
+      expect(parsed).to.equal({
+        githubOrgId: 12345,
+        githubUserId: 6789,
+        repoName: 'Runnable/helloode',
+        branchName: 'feature-1'
+      })
+      done()
+    })
+  }) // end githubPushed
 
   describe('instanceCreated', () => {
     beforeEach((done) => {
