@@ -7,6 +7,7 @@ const sinon = require('sinon')
 
 const jobParser = require('utils/job-parser')
 const JobParseError = require('errors/job-parse-error')
+const WorkerStopError = require('error-cat/errors/worker-stop-error')
 
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
@@ -1086,6 +1087,35 @@ describe('job-parser unit test', () => {
         dockerHostIp: testDockerHostIp,
         githubOrgId: testGithubOrgId
       })
+      done()
+    })
+    it('should throw WorkerStopError if unsupported containerType', (done) => {
+      const testBranchName = 'Avis'
+      const testInstanceId = 'Morsmorde'
+      const testGithubOrgId = 12674
+      const testGithubUserId = 1736
+      const testDockerHostIp = '10.0.0.2'
+      const testContainerType = 'layerCopy'
+      const testJob = {
+        id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
+        host: `http://${testDockerHostIp}:4242`,
+        needsInspect: true,
+        inspectData: {
+          Config: {
+            Labels: {
+              instanceName: testBranchName,
+              instanceId: testInstanceId,
+              githubOrgId: testGithubOrgId,
+              sessionUserGithubId: testGithubUserId,
+              type: testContainerType,
+              manualBuild: 'true'
+            }
+          }
+        }
+      }
+      expect(jobParser.parseContainerLifeCycleJob.bind(null, testJob)).to.throw(
+        WorkerStopError, /Ignore events for utility container types/gi
+      )
       done()
     })
   }) // end parseContainerLifeCycleJob
