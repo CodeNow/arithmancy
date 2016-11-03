@@ -345,7 +345,7 @@ describe('job-parser unit test', () => {
       const testJob = {
         payload: {
           repository: {
-            name: 'Runnable/helloode',
+            full_name: 'Runnable/helloode',
             owner: {
               id: 12345
             }
@@ -370,7 +370,7 @@ describe('job-parser unit test', () => {
       const testJob = {
         payload: {
           repository: {
-            name: 'Runnable/helloode',
+            full_name: 'Runnable/helloode',
             owner: {}
           },
           organization: {
