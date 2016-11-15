@@ -638,21 +638,6 @@ describe('job-parser unit test', () => {
     })
   }) // end organizationUserRemoved
 
-  describe('userWhitelisted', () => {
-    it('should parse tags correctly', (done) => {
-      const testJob = {
-        githubId: 1738
-      }
-
-      const tags = jobParser.userWhitelisted(testJob)
-
-      expect(tags).to.equal({
-        githubOrgId: testJob.githubId
-      })
-      done()
-    })
-  }) // end userWhitelisted
-
   describe('userAuthorized', () => {
     it('should parse tags correctly', (done) => {
       const testGithubUserId = 1738
