@@ -1,0 +1,2 @@
+FROM rabbitmq:3.4.3-management
+ADD ./docker/rabbitmq.config /etc/rabbitmq/rabbitmq.config

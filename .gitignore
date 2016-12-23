@@ -32,3 +32,4 @@ dump.rdb
 erl_crash
 *.sublime-project
 *.sublime-workspace
+.idea
