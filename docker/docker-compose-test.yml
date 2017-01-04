@@ -1,0 +1,24 @@
+version: '2'
+services:
+  arithmancy-test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_test
+    links:
+      - 'pg'
+      - 'rabbit'
+    environment:
+      - ROOT_POSTGRES_CONNECTION=postgres://postgres@pg/postgres
+      - POSTGRES_CONNECT_STRING=postgres://postgres@pg/arithmancy
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=5WE5wsEQmfw9sLsppJ4CEq9Auea8mPC4kgVt3xYqKxbYHPfP
+      - RABBITMQ_PASSWORD=h7n972sPLs5tWGCWe6QPSCnaxDWjvnpEFEA9c9mBqauH3f22
+      - RABBITMQ_HOSTNAME=rabbit
+  rabbit:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_rabbitmq
+  pg:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_pg

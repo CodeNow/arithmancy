@@ -20,7 +20,9 @@ const UserContainerLifeCycleStartedEvent = require('../fixtures/user-container.l
 require('sinon-as-promised')(Promise)
 const lab = exports.lab = Lab.script()
 
+const after = lab.after
 const afterEach = lab.afterEach
+const before = lab.before
 const beforeEach = lab.beforeEach
 const describe = lab.describe
 const expect = Code.expect
@@ -37,10 +39,17 @@ describe('container.life-cycle.started functional tests', () => {
     password: process.env.RABBITMQ_PASSWORD,
     events: SubscribedEventList
   })
+  before((done) => {
+    sinon.stub(monitor, 'increment').returns()
+    done()
+  })
+  after((done) => {
+    monitor.increment.restore()
+    done()
+  })
 
-  beforeEach(() => {
-    sinon.spy(monitor, 'increment')
-    return testPublisher.connect()
+  beforeEach((done) => {
+    testPublisher.connect()
       .then(() => {
         return postgresStore.initialize()
       })
@@ -58,25 +67,26 @@ describe('container.life-cycle.started functional tests', () => {
       .then(() => {
         return startArithmancy()
       })
+      .asCallback(done)
   })
 
-  afterEach(() => {
-    monitor.increment.restore()
-    return postgresStore._knex.destroy()
+  afterEach((done) => {
+    postgresStore._knex.destroy()
       .then(() => {
         return server.stop()
       })
       .then(() => {
         return testPublisher.disconnect()
       })
+      .asCallback(done)
   })
 
-  it('should handle user container.life-cycle.started', () => {
+  it('should handle user container.life-cycle.started', (done) => {
     const testEventName = 'container.life-cycle.started'
 
     testPublisher.publishEvent('container.life-cycle.started', UserContainerLifeCycleStartedEvent)
 
-    return Promise.try(function loop () {
+    Promise.try(function loop () {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
           if (eventDataTable.length !== 1) {
@@ -116,13 +126,14 @@ describe('container.life-cycle.started functional tests', () => {
         isWorkerSuccessfull: true
       })
     })
+    .asCallback(done)
   })
 
-  it('should handle build container.life-cycle.started', () => {
+  it('should handle build container.life-cycle.started', (done) => {
     const testEventName = 'container.life-cycle.started'
     testPublisher.publishEvent(testEventName, BuildContainerLifeCycleStartedEvent)
 
-    return Promise.try(function loop () {
+    Promise.try(function loop () {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
           if (eventDataTable.length !== 1) {
@@ -161,13 +172,14 @@ describe('container.life-cycle.started functional tests', () => {
         isManualBuild: true
       })
     })
+    .asCallback(done)
   })
 
   it('should handle random container.life-cycle.started', (done) => {
     const testEventName = 'container.life-cycle.started'
     testPublisher.publishEvent('container.life-cycle.started', InvalidContainerLifeCycleStartedEvent)
 
-    return Promise.try(function loop () {
+    Promise.try(function loop () {
       return postgresStore._knex('events')
         .then((eventDataTable) => {
           if (eventDataTable.length !== 1) {
@@ -198,5 +210,6 @@ describe('container.life-cycle.started functional tests', () => {
         githubOrgId: testOrgId
       })
     })
+    .asCallback(done)
   })
 }) // end container.life-cycle.started functional tests
