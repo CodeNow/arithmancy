@@ -18,8 +18,8 @@
     "start": "NODE_PATH=./lib node index.js",
     "test": "NODE_ENV=test npm run create-db; npm run migrate-down && npm run migrate-up && npm run lint && npm run all-test",
     "unit": "NODE_PATH=./lib NODE_ENV=test lab -l -v test/unit",
-    "compose-test-up": "docker-compose -f docker/docker-compose-test.yml up --build",
-    "compose-test-down": "docker-compose -f docker/docker-compose-test.yml down"
+    "compose-test-up": "docker-compose -f docker-compose-test.yml up --build",
+    "compose-test-down": "docker-compose -f docker-compose-test.yml down"
   },
   "repository": {
     "type": "git",

@@ -2,8 +2,8 @@ version: '2'
 services:
   arithmancy-test:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile_test
+      context: .
+      dockerfile: Dockerfile_test
     links:
       - 'pg'
       - 'rabbit'
@@ -16,9 +16,9 @@ services:
       - RABBITMQ_HOSTNAME=rabbit
   rabbit:
     build:
-      context: ..
+      context: .
       dockerfile: docker/Dockerfile_rabbitmq
   pg:
     build:
-      context: ..
+      context: .
       dockerfile: docker/Dockerfile_pg
