@@ -2,4 +2,4 @@ FROM rabbitmq:3.4.3-management
 
 ADD [".", "/arithmancy"]
 WORKDIR /arithmancy
-ADD ./docker/rabbitmq.config /etc/rabbitmq/rabbitmq.config
+ADD ./rabbitmq.config /etc/rabbitmq/rabbitmq.config

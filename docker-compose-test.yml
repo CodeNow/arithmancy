@@ -16,9 +16,9 @@ services:
       - RABBITMQ_HOSTNAME=rabbit
   rabbit:
     build:
-      context: .
+      context: ./env-config
       dockerfile: Dockerfile_rabbitmq
   pg:
     build:
       context: .
-      dockerfile: docker/Dockerfile_pg
+      dockerfile: env-config/Dockerfile_pg
