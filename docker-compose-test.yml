@@ -17,7 +17,7 @@ services:
   rabbit:
     build:
       context: .
-      dockerfile: docker/Dockerfile_rabbitmq
+      dockerfile: Dockerfile_rabbitmq
   pg:
     build:
       context: .
