@@ -109,6 +109,18 @@ describe('job-parser unit test', () => {
     })
   }) // end applicationContainerStarted
 
+  describe('autoIsolationConfigCreated', () => {
+    it('should parse correctly', (done) => {
+      const testJob = { user: { id: 1 }, org: { id: 2 } }
+      const parsed = jobParser.autoIsolationConfigCreated(testJob)
+      expect(parsed).to.equal({
+        bigPoppaOrgId: testJob.org.id,
+        bigPoppaUserId: testJob.user.id
+      })
+      done()
+    })
+  }) // end autoIsolationConfigCreated
+
   describe('buildContainerCreated', () => {
     beforeEach((done) => {
       sinon.stub(jobParser, 'parseContainerLifeCycleJob')
