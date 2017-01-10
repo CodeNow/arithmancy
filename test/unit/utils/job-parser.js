@@ -111,10 +111,10 @@ describe('job-parser unit test', () => {
 
   describe('autoIsolationConfigCreated', () => {
     it('should parse correctly', (done) => {
-      const testJob = { user: { id: 1 }, org: { id: 2 } }
+      const testJob = { user: { id: 1 }, organization: { id: 2 } }
       const parsed = jobParser.autoIsolationConfigCreated(testJob)
       expect(parsed).to.equal({
-        bigPoppaOrgId: testJob.org.id,
+        bigPoppaOrgId: testJob.organization.id,
         bigPoppaUserId: testJob.user.id
       })
       done()
