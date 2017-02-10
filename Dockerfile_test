@@ -4,6 +4,12 @@ ADD ["./package.json", "/arithmancy/package.json"]
 WORKDIR /arithmancy
 
 RUN npm install
+
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /wait.sh
+RUN chmod +x /wait.sh
+
 ADD [".", "/arithmancy"]
 
-CMD sleep 20; npm run test
+CMD dockerize -wait tcp://db:5432
+
+CMD /wait.sh rabbit:5672 -t 30 && /wait.sh pg:5432 -t 30 && npm run test
