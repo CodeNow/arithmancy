@@ -12,4 +12,4 @@ ADD [".", "/arithmancy"]
 
 CMD dockerize -wait tcp://db:5432
 
-CMD /wait.sh rabbit:5672 -t 30 && /wait.sh pg:5432 -t 30 && npm run test
+CMD /wait.sh $RABBITMQ_HOSTNAME:5672 -t 30 && /wait.sh $POSTGRES_HOSTNAME:5432 -t 30 && npm run test

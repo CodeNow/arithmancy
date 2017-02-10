@@ -10,6 +10,7 @@ services:
     environment:
       - ROOT_POSTGRES_CONNECTION=postgres://postgres@pg/postgres
       - POSTGRES_CONNECT_STRING=postgres://postgres@pg/arithmancy
+      - POSTGRES_HOSTNAME=pg
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=5WE5wsEQmfw9sLsppJ4CEq9Auea8mPC4kgVt3xYqKxbYHPfP
       - RABBITMQ_PASSWORD=h7n972sPLs5tWGCWe6QPSCnaxDWjvnpEFEA9c9mBqauH3f22
