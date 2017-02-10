@@ -953,9 +953,10 @@ describe('job-parser unit test', () => {
     const testId = '1231234'
     const testOwnerId = 1738
     let testJob
+    const shortHash = 'asdf1234'
 
     beforeEach((done) => {
-      testJob = { id: testId, owner: { github: testOwnerId } }
+      testJob = { id: testId, owner: { github: testOwnerId }, shortHash: shortHash }
       sinon.stub(jobParser, 'getContextVersionTags')
       done()
     })
@@ -969,7 +970,8 @@ describe('job-parser unit test', () => {
       const result = jobParser.getInstanceTags(testJob)
       expect(result).to.equal({
         instanceId: testId,
-        githubOrgId: testOwnerId
+        githubOrgId: testOwnerId,
+        shortHash: shortHash
       })
       done()
     })
@@ -981,7 +983,8 @@ describe('job-parser unit test', () => {
       expect(result).to.equal({
         instanceId: testId,
         masterInstanceId: testId,
-        githubOrgId: testOwnerId
+        githubOrgId: testOwnerId,
+        shortHash: shortHash
       })
       done()
     })
@@ -997,7 +1000,8 @@ describe('job-parser unit test', () => {
       expect(result).to.equal({
         instanceId: testId,
         contextVersionId: testId,
-        githubOrgId: testOwnerId
+        githubOrgId: testOwnerId,
+        shortHash: shortHash
       })
       sinon.assert.calledOnce(jobParser.getContextVersionTags)
       sinon.assert.calledWith(jobParser.getContextVersionTags, testContextVersion)
@@ -1116,4 +1120,29 @@ describe('job-parser unit test', () => {
       done()
     })
   }) // end parseContainerLifeCycleJob
+  describe('applicationUrlVisited', () => {
+    const testJob = {
+      elasticUrl: 'job.elasticUrl',
+      ownerGithubId: 'job.ownerGithubId',
+      ownerUsername: 'job.ownerUsername',
+      referer: 'job.referer',
+      refererIsGithub: 'job.refererIsGithub',
+      shortHash: 'job.shortHash',
+      targetHost: 'job.targetHos'
+    }
+
+    it('should map the request', (done) => {
+      const result = jobParser.applicationUrlVisited(testJob)
+      expect(result).to.equal({
+        elasticUrl: testJob.elasticUrl,
+        githubOrgId: testJob.ownerGithubId,
+        githubOrgUsername: testJob.ownerUsername,
+        referer: testJob.referer,
+        refererIsGithub: testJob.refererIsGithub,
+        shortHash: testJob.shortHash,
+        naviTargetHost: testJob.targetHost
+      })
+      done()
+    })
+  })
 }) // end job-parser unit test
