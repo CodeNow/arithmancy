@@ -1,7 +1,9 @@
 FROM node:4.6
 
-ADD [".", "/arithmancy"]
+ADD ["./package.json", "/arithmancy/package.json"]
 WORKDIR /arithmancy
+
 RUN npm install
+ADD [".", "/arithmancy"]
 
 CMD sleep 20; npm run test
