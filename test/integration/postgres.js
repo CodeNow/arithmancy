@@ -57,28 +57,33 @@ describe('postgres integration test', () => {
             expect(eventDataTable).to.have.length(1)
             const eventData = eventDataTable.pop()
             expect(eventData).to.equal({
-              id: 1,
-              event_name: 'container.died',
               app_name: process.env.APP_NAME,
-              time_published: testDate,
-              time_recevied: testDate,
-              transaction_id: '123123123123',
-              previous_event_name: 'container.start',
-              github_org_id: 123123,
-              container_type: 'user-container',
-              stripe_customer_id: null,
-              github_user_id: null,
               big_poppa_org_id: null,
               big_poppa_user_id: null,
-              docker_host_ip: null,
-              master_instance_id: null,
-              instance_id: null,
-              context_version_id: null,
+              branch_name: null,
               container_id: null,
+              container_type: 'user-container',
+              context_version_id: null,
+              docker_host_ip: null,
+              elastic_url: null,
+              event_name: 'container.died',
+              github_org_id: 123123,
+              github_org_username: null,
+              github_user_id: null,
+              id: 1,
+              instance_id: null,
               is_manual_build: null,
               is_worker_successfull: true,
+              master_instance_id: null,
+              navi_target_host: null,
+              previous_event_name: 'container.start',
+              referer: null,
               repo_name: null,
-              branch_name: null
+              short_hash: null,
+              stripe_customer_id: null,
+              time_published: testDate,
+              time_recevied: testDate,
+              transaction_id: '123123123123'
             })
           })
       })
