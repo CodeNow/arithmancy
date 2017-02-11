@@ -1139,7 +1139,9 @@ describe('job-parser unit test', () => {
           pull_request: {
             head: {
               ref: 'ref',
-              full_name: 'foo/bar'
+              repo: {
+                full_name: 'foo/bar'
+              }
             }
           },
           repository: {
@@ -1163,7 +1165,7 @@ describe('job-parser unit test', () => {
           githubOrgUsername: testJob.payload.repository.owner.login,
           githubPullRequestNumber: testJob.payload.number,
           githubUserId: testJob.payload.sender.id,
-          repoName: testJob.payload.pull_request.head.full_name.split('/')[1]
+          repoName: testJob.payload.pull_request.head.repo.full_name.split('/')[1]
         })
         done()
       })
