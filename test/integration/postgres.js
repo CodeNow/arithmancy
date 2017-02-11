@@ -56,36 +56,35 @@ describe('postgres integration test', () => {
           .then((eventDataTable) => {
             expect(eventDataTable).to.have.length(1)
             const eventData = eventDataTable.pop()
-            expect(eventData).to.equal({
-              app_name: process.env.APP_NAME,
-              big_poppa_org_id: null,
-              big_poppa_user_id: null,
-              branch_name: null,
-              container_id: null,
-              container_type: 'user-container',
-              context_version_id: null,
-              docker_host_ip: null,
-              elastic_url: null,
-              event_name: 'container.died',
-              github_org_id: 123123,
-              github_org_username: null,
-              github_user_id: null,
-              id: 1,
-              instance_id: null,
-              is_manual_build: null,
-              is_worker_successfull: true,
-              master_instance_id: null,
-              navi_target_host: null,
-              previous_event_name: 'container.start',
-              referer: null,
-              repo_name: null,
-              short_hash: null,
-              stripe_customer_id: null,
-              time_published: testDate,
-              time_recevied: testDate,
-              transaction_id: '123123123123'
-            })
+            expect(eventData.app_name).to.equal(process.env.APP_NAME)
+            expect(eventData.big_poppa_org_id).to.equal(null)
+            expect(eventData.big_poppa_user_id).to.equal(null)
+            expect(eventData.branch_name).to.equal(null)
+            expect(eventData.container_id).to.equal(null)
+            expect(eventData.container_type).to.equal('user-container')
+            expect(eventData.context_version_id).to.equal(null)
+            expect(eventData.docker_host_ip).to.equal(null)
+            expect(eventData.elastic_url).to.equal(null)
+            expect(eventData.event_name).to.equal('container.died')
+            expect(eventData.github_org_id).to.equal(123123)
+            expect(eventData.github_org_username).to.equal(null)
+            expect(eventData.github_user_id).to.equal(null)
+            expect(eventData.id).to.equal(1)
+            expect(eventData.instance_id).to.equal(null)
+            expect(eventData.is_manual_build).to.equal(null)
+            expect(eventData.is_worker_successfull).to.equal(true)
+            expect(eventData.master_instance_id).to.equal(null)
+            expect(eventData.navi_target_host).to.equal(null)
+            expect(eventData.previous_event_name).to.equal('container.start')
+            expect(eventData.referer).to.equal(null)
+            expect(eventData.repo_name).to.equal(null)
+            expect(eventData.short_hash).to.equal(null)
+            expect(eventData.stripe_customer_id).to.equal(null)
+            expect(eventData.time_published).to.equal(testDate)
+            expect(eventData.time_recevied).to.equal(testDate)
+            expect(eventData.transaction_id).to.equal('123123123123')
           })
       })
   })
 })
+
