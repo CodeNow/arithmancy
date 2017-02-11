@@ -1120,6 +1120,92 @@ describe('job-parser unit test', () => {
       done()
     })
   }) // end parseContainerLifeCycleJob
+
+  ;[
+    'githubPullRequestAssigned',
+    'githubPullRequestUnassigned',
+    'githubPullRequestReviewRequested',
+    'githubPullRequestReviewRequestRemoved',
+    'githubPullRequestLabeled',
+    'githubPullRequestUnlabeled',
+    'githubPullRequestOpened',
+    'githubPullRequestEdited',
+    'githubPullRequestClosed',
+    'githubPullRequestReopened'
+  ].forEach((prEvent) => {
+    describe(prEvent, () => {
+      const testJob = {
+        payload: {
+          pull_request: {
+            head: {
+              ref: 'ref',
+              full_name: 'foo/bar'
+            }
+          },
+          repository: {
+            owner: {
+              id: 12345,
+              login: 'foo'
+            }
+          },
+          number: 123456,
+          sender: {
+            id: 1234567
+          }
+        }
+      }
+
+      it('should map the request', (done) => {
+        const result = jobParser[prEvent](testJob)
+        expect(result).to.equal({
+          branchName: testJob.payload.pull_request.head.ref,
+          githubOrgId: testJob.payload.repository.owner.id,
+          githubOrgUsername: testJob.payload.repository.owner.login,
+          githubPullRequestNumber: testJob.payload.number,
+          githubUserId: testJob.payload.sender.id,
+          repoName: testJob.payload.pull_request.head.full_name.split('/')[1]
+        })
+        done()
+      })
+    })
+  })
+
+  ;[
+    'githubBranchCreated',
+    'githubBranchDeleted'
+  ].forEach((branchEvent) => {
+    describe(branchEvent, () => {
+      const testJob = {
+        payload: {
+          ref: 'myBranchName',
+          repository: {
+            full_name: 'foo/bar',
+            owner: {
+              id: 12345,
+              login: 'foo'
+            }
+          },
+          number: 123456,
+          sender: {
+            id: 1234567
+          }
+        }
+      }
+
+      it('should map the request', (done) => {
+        const result = jobParser[branchEvent](testJob)
+        expect(result).to.equal({
+          branchName: testJob.payload.ref,
+          githubOrgId: testJob.payload.repository.owner.id,
+          githubOrgUsername: testJob.payload.repository.owner.login,
+          githubUserId: testJob.payload.sender.id,
+          repoName: testJob.payload.repository.full_name.split('/')[1]
+        })
+        done()
+      })
+    })
+  })
+
   describe('applicationUrlVisited', () => {
     const testJob = {
       elasticUrl: 'job.elasticUrl',
