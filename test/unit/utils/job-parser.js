@@ -1131,7 +1131,8 @@ describe('job-parser unit test', () => {
     'githubPullRequestOpened',
     'githubPullRequestEdited',
     'githubPullRequestClosed',
-    'githubPullRequestReopened'
+    'githubPullRequestReopened',
+    'githubPullRequestSynchronized'
   ].forEach((prEvent) => {
     describe(prEvent, () => {
       const testJob = {
