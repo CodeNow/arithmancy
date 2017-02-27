@@ -1208,6 +1208,62 @@ describe('job-parser unit test', () => {
     })
   })
 
+  ;[
+    'terminalConected',
+    'terminalDataSent',
+    'logstreamConnected'
+  ].forEach((eventName) => {
+    describe(eventName, () => {
+      const testJob = {
+        container: {
+          id: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55',
+          isDebug: false
+        },
+        user: {
+          id: '15151',
+          githubId: '9999'
+        },
+        organization: {
+          githubId: '18118'
+        },
+        instance: {
+          id: 'instance-id',
+          shortHash: 'ab61',
+          owner: {
+            github: '18118'
+          },
+          contextVersion: {
+            id: 'cv-id',
+            appCodeVersions: [
+              {
+                additionalRepo: false,
+                repo: 'CodeNow/api',
+                branch: 'feature-1'
+              }
+            ]
+          }
+        }
+      }
+
+      it('should map the job', (done) => {
+        const result = jobParser[eventName](testJob)
+        expect(result).to.equal({
+          githubOrgId: '18118',
+          instanceId: 'instance-id',
+          shortHash: 'ab61',
+          contextVersionId: 'cv-id',
+          repoName: 'CodeNow/api',
+          branchName: 'feature-1',
+          bigPoppaOrgId: undefined,
+          githubUserId: '9999',
+          bigPoppaUserId: '15151',
+          containerId: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55' }
+        )
+        done()
+      })
+    })
+  })
+
   describe('applicationUrlVisited', () => {
     const testJob = {
       elasticUrl: 'job.elasticUrl',
