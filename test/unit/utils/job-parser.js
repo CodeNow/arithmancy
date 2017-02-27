@@ -1220,11 +1220,12 @@ describe('job-parser unit test', () => {
           isDebug: false
         },
         user: {
-          id: '15151',
+          id: 15151,
           githubId: '9999'
         },
         organization: {
-          githubId: '18118'
+          githubId: '18118',
+          ownerUsername: 'CodeNow'
         },
         instance: {
           id: 'instance-id',
@@ -1249,6 +1250,7 @@ describe('job-parser unit test', () => {
         const result = jobParser[eventName](testJob)
         expect(result).to.equal({
           githubOrgId: '18118',
+          githubOrgUsername: 'CodeNow',
           instanceId: 'instance-id',
           shortHash: 'ab61',
           contextVersionId: 'cv-id',
@@ -1256,7 +1258,7 @@ describe('job-parser unit test', () => {
           branchName: 'feature-1',
           bigPoppaOrgId: undefined,
           githubUserId: '9999',
-          bigPoppaUserId: '15151',
+          bigPoppaUserId: 15151,
           containerId: '068a664de33cf2103f034c037ed93c571252a80a30231c04d748826643ab1a55' }
         )
         done()
