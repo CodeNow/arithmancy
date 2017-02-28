@@ -1209,7 +1209,7 @@ describe('job-parser unit test', () => {
   })
 
   ;[
-    'terminalConected',
+    'terminalConnected',
     'terminalDataSent',
     'logstreamConnected'
   ].forEach((eventName) => {
